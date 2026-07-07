@@ -1,0 +1,27 @@
+Act as an expert backend developer and AI architect. I need to deeply refactor and optimize my WhatsApp Sales AI Agent to drastically reduce LLM token consumption and fix the coupon logic. 
+
+Here are the 3 main architectural changes I need you to implement across my project:
+
+### 1. Optimize Conversation History (Reduce Token Usage)
+Target file: `artifacts/api-server/src/routes/webhook.ts` (or wherever conversation history is fetched).
+Currently, the system fetches the last 40 messages. This consumes a massive amount of tokens. 
+- Change the logic to fetch only the last 10-15 messages.
+- Implement a "Session Boundary" check: If the time difference between the current message and the last message is greater than 6 hours, DO NOT load the previous message history. Treat it as a fresh start, but inject a small system note: "[Note: This is a new session. Greet the user naturally without assuming they want to continue yesterday's order unless they ask]".
+
+### 2. Fix Coupon Logic (Strictly On-Demand)
+Target file: `artifacts/api-server/src/lib/agentContext.ts` and System Prompt.
+The agent is currently mentioning coupons too early because they are injected into the context unconditionally.
+- Remove the coupon list from the default `buildAgentContext()`.
+- Update the logic so that the system ONLY fetches and injects a specific coupon into the context IF the user's message explicitly contains a word like "كوبون", "خصم", "كود", or if they type a string that matches our coupon format.
+- Add a strict rule in the system prompt: "NEVER mention, suggest, or offer a discount code or coupon unless the customer explicitly provides one first to be applied."
+
+### 3. Migrate from Tag-based Actions to Native Function Calling (Crucial Token Saver)
+Target files: `groq.ts` / `webhook.ts` / `orderActions.ts` / `returnActions.ts`.
+Currently, the LLM is instructed via a long system prompt to generate custom text tags like `[ORDER_ACTION:{...}]` and `[RETURN_ACTION:{...}]`. This takes up huge prompt tokens to explain and causes JSON parsing bugs (like orphaned `{`).
+- Completely remove the manual Regex parsing logic for these tags.
+- Implement Native Function Calling (Tool Calling) for Groq/Gemini. 
+- Define two JSON Schema Tools: `submit_order` (arguments: customerName, phone, address, items, total) and `request_return` (arguments: orderId, reason, items).
+- Bind these tools to the LLM call. When the LLM decides an order is ready or a return is requested, it should trigger the tool naturally, and the backend should catch the tool call, execute the DB save, and proceed.
+- Remove all the lengthy explanations of how to format `[ORDER_ACTION]` from the `buildStrictSystemPrompt()`. This alone will save thousands of tokens per request.
+
+Please review the current codebase related to these areas and provide the updated code step-by-step. Start with the `webhook.ts` optimization and Function Calling implementation.

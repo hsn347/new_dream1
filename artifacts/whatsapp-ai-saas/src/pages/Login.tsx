@@ -1,0 +1,233 @@
+import { useState } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
+import { Bot, MessageCircle, TrendingUp, Users, Zap, Eye, EyeOff } from "lucide-react";
+
+const features = [
+  { icon: MessageCircle, title: "محادثات ذكية", desc: "رد تلقائي طبيعي بلهجتك المحلية" },
+  { icon: TrendingUp, title: "زيادة المبيعات", desc: "إقناع واحترافية في كل رسالة" },
+  { icon: Users, title: "إدارة العملاء", desc: "CRM متكامل داخل واتساب" },
+  { icon: Zap, title: "تشغيل فوري", desc: "ابدأ خلال دقائق بدون تعقيد" },
+];
+
+export default function Login() {
+  const { login } = useAuth();
+  const [, setLocation] = useLocation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const success = await login(email, password);
+      if (success) {
+        const me = await fetch("/api/auth/me", { credentials: "include" }).then(r => r.json()) as { role?: string } | null;
+        setLocation(me?.role === "admin" ? "/admin/keys" : "/dashboard");
+      } else {
+        setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      }
+    } catch {
+      setError("حدث خطأ في الاتصال. حاول مرة أخرى.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex bg-muted/30" dir="rtl">
+
+      {/* ── Form Card (right in RTL = start) ─────────────────────── */}
+      <div className="flex-1 flex items-center justify-center p-6 lg:max-w-[480px]">
+        <div className="w-full max-w-sm">
+
+          {/* Card */}
+          <div className="bg-card border border-border rounded-2xl shadow-xl p-8 space-y-6">
+
+            {/* Logo + Title */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center shadow-md">
+                  <Bot className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="font-bold text-foreground text-sm">وكيل المبيعات</p>
+                  <p className="text-muted-foreground text-xs">WhatsApp AI</p>
+                </div>
+              </div>
+              <h1 className="text-2xl font-extrabold text-foreground">أهلاً بعودتك 👋</h1>
+              <p className="text-muted-foreground text-sm">سجّل الدخول للوصول إلى لوحة التحكم</p>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5" htmlFor="email">
+                  البريد الإلكتروني
+                </label>
+                <input
+                  id="email"
+                  data-testid="input-email"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="example@domain.com"
+                  required
+                  className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5" htmlFor="password">
+                  كلمة المرور
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    data-testid="input-password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    className="w-full h-11 px-4 pe-11 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 start-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <div className="bg-destructive/10 text-destructive text-sm px-4 py-2.5 rounded-xl border border-destructive/20">
+                  {error}
+                </div>
+              )}
+
+              <button
+                data-testid="btn-login"
+                type="submit"
+                disabled={loading}
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl transition-all disabled:opacity-60 text-sm flex items-center justify-center gap-2 shadow-md shadow-primary/20"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    جاري تسجيل الدخول...
+                  </>
+                ) : (
+                  <>🔑 تسجيل الدخول</>
+                )}
+              </button>
+            </form>
+
+            {/* Demo credentials */}
+            <div className="rounded-xl border border-sidebar-border bg-sidebar overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-sidebar-border">
+                <p className="text-xs font-semibold text-sidebar-foreground flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sidebar-primary inline-block" />
+                  بيانات تجريبية — اضغط لملء تلقائياً
+                </p>
+              </div>
+              <div className="divide-y divide-sidebar-border">
+                <button
+                  type="button"
+                  onClick={() => { setEmail("admin@demo.com"); setPassword("admin123"); }}
+                  className="w-full flex justify-between items-center px-4 py-2.5 hover:bg-sidebar-accent transition-colors"
+                >
+                  <span className="text-xs text-sidebar-accent-foreground">مدير النظام</span>
+                  <span className="font-mono text-xs text-sidebar-foreground">admin@demo.com / admin123</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setEmail("user@demo.com"); setPassword("user123"); }}
+                  className="w-full flex justify-between items-center px-4 py-2.5 hover:bg-sidebar-accent transition-colors"
+                >
+                  <span className="text-xs text-sidebar-accent-foreground">مستخدم عادي</span>
+                  <span className="font-mono text-xs text-sidebar-foreground">user@demo.com / user123</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <p className="text-center text-xs text-muted-foreground mt-5">
+            © 2026 وكيل المبيعات. جميع الحقوق محفوظة.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Marketing Panel (left in RTL = end) ──────────────────── */}
+      <div className="hidden lg:flex flex-1 bg-sidebar flex-col justify-between p-10 relative overflow-hidden">
+
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="absolute -top-20 -end-20 w-80 h-80 rounded-full bg-sidebar-primary" />
+          <div className="absolute -bottom-20 -start-20 w-80 h-80 rounded-full bg-sidebar-primary" />
+        </div>
+
+        {/* Top: brand + AI badge */}
+        <div className="flex items-start justify-between relative z-10">
+          <div className="inline-flex items-center gap-1.5 bg-sidebar-accent border border-sidebar-border text-sidebar-foreground text-xs font-medium px-3 py-1.5 rounded-full">
+            <span>✨</span>
+            <span>مدعوم بالذكاء الاصطناعي</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-end">
+              <p className="font-bold text-sidebar-foreground text-sm">وكيل المبيعات</p>
+              <p className="text-sidebar-accent-foreground text-xs">WhatsApp AI Sales Agent</p>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center shadow-lg">
+              <Bot className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </div>
+
+        {/* Middle: headline + desc + features */}
+        <div className="space-y-8 relative z-10">
+          <div>
+            <h2 className="text-4xl font-extrabold text-sidebar-foreground leading-tight">
+              أتمتة مبيعاتك<br />
+              <span className="text-sidebar-primary">عبر واتساب</span><br />
+              بالذكاء الاصطناعي
+            </h2>
+            <p className="mt-4 text-sidebar-accent-foreground text-sm leading-relaxed max-w-sm">
+              وكيل ذكي يعمل 24/7 لإدارة محادثات العملاء، عرض المنتجات، وإتمام الصفقات تلقائياً.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {features.map(({ icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="flex items-start gap-3 p-4 rounded-xl border border-sidebar-border bg-sidebar-accent/40 backdrop-blur-sm"
+              >
+                <div className="w-8 h-8 rounded-lg border border-sidebar-border bg-sidebar-accent flex items-center justify-center shrink-0 mt-0.5">
+                  <Icon className="w-4 h-4 text-sidebar-primary" />
+                </div>
+                <div>
+                  <p className="text-sidebar-foreground text-sm font-semibold">{title}</p>
+                  <p className="text-sidebar-accent-foreground text-xs mt-0.5 leading-relaxed">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom: copyright */}
+        <p className="text-sidebar-accent-foreground text-xs relative z-10">
+          © 2026 وكيل المبيعات. جميع الحقوق محفوظة.
+        </p>
+      </div>
+
+    </div>
+  );
+}

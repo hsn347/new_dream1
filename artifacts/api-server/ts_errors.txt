@@ -1,0 +1,20 @@
+src/lib/agentBrain.ts(1575,45): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/agentBrain.ts(1581,37): error TS18048: 'found' is possibly 'undefined'.
+src/lib/agentBrain.ts(1582,35): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/agentBrain.ts(1582,42): error TS18048: 'found' is possibly 'undefined'.
+src/lib/agentBrain.ts(1582,55): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/agentBrain.ts(1582,64): error TS18048: 'found' is possibly 'undefined'.
+src/lib/agentBrain.ts(1595,42): error TS18047: 'mediaDownload' is possibly 'null'.
+src/lib/agentBrain.ts(1598,17): error TS18047: 'omqiAccount' is possibly 'null'.
+src/lib/agentBrain.ts(1599,17): error TS18047: 'omqiAccount' is possibly 'null'.
+src/lib/agentBrain.ts(1688,28): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/lib/agentBrain.ts(1698,25): error TS18047: 'receiptAmount' is possibly 'null'.
+src/lib/agentBrain.ts(1699,53): error TS18047: 'receiptAmount' is possibly 'null'.
+src/lib/agentBrain.ts(1736,25): error TS18047: 'receiptAmount' is possibly 'null'.
+src/lib/agentBrain.ts(1737,39): error TS18047: 'receiptAmount' is possibly 'null'.
+src/lib/agentBrain.ts(1777,21): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.

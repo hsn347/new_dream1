@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <title>فاتورة مبيعات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --gold: #ffbf40;
+            --gold-dark: #ffbf40;
+            --bg-main: #f6f6f6;
+            --bg-card: #f6f6f6;
+            --bg-row: #ffffff;
+            --bg-row-alt: #f1f3f5;
+            --text-main: #2b2b2b;
+            --text-muted: #6c757d;
+            --text-dark: #111111;
+            --border: #e9ecef;
+            --watermark-url: url('https://i.ibb.co/wNYcY6C9/modern-solar-battery-logo-1774880020098.jpg');
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #e8e8e8;
+            margin: 0;
+            padding: 20px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .invoice-page {
+            width: 800px;
+            min-height: 1050px;
+            /* Safe height for screen preview */
+            margin: 0 auto 30px;
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            overflow: hidden;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 0;
+        }
+
+        .invoice-page::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background-image: var(--watermark-url);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.07;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ======= HEADER ======= */
+        .invoice-header {
+            background-color: var(--bg-main);
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            min-height: 105px;
+            overflow: hidden;
+        }
+
+        .header-diagonal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+
+        .header-diagonal::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 380px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-main) 50%, var(--gold) 50%);
+        }
+
+        .header-diagonal::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 190px;
+            height: 100%;
+            background-color: var(--gold);
+        }
+
+        .logo-area {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 10px 10px 35px;
+        }
+
+        .logo-area img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            background-color: var(--bg-card);
+            padding: 0px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-text {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+            background-color: var(--gold);
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .invoice-title-area {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 15px 35px;
+            text-align: left;
+        }
+
+        .invoice-title-area h1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--text-dark);
+            letter-spacing: 0px;
+            line-height: 1.2;
+        }
+
+        .invoice-meta-grid {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 2px 15px;
+            text-align: left;
+        }
+
+        .invoice-meta-grid .label {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .invoice-meta-grid .value {
+            font-size: 11px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* ======= INFO SECTION ======= */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px 35px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .block-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+            border-right: 3px solid var(--gold);
+            padding-right: 8px;
+        }
+
+        .customer-name-display {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .customer-contact {
+            font-size: 11px;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .customer-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .payment-info-block {
+            text-align: left;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 4px 20px;
+            margin-top: 8px;
+        }
+
+        .payment-grid .pg-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .payment-grid .pg-value {
+            font-size: 11px;
+            color: var(--text-main);
+            font-weight: 700;
+            text-align: left;
+        }
+
+        /* ======= TABLE ======= */
+        .table-section {
+            padding: 0 25px 10px;
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: var(--gold);
+        }
+
+        thead th {
+            padding: 6px 15px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: right;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        thead th:first-child {
+            text-align: center;
+            width: 50px;
+        }
+
+        thead th:last-child {
+            text-align: left;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: var(--bg-row-alt);
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: var(--bg-row);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 5px 15px;
+            font-size: 14px;
+            color: var(--text-main);
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        tbody td:first-child {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        tbody td:last-child {
+            text-align: left;
+            font-weight: 700;
+            color: var(--gold-dark);
+            font-size: 15px;
+        }
+
+        .item-index {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--gold);
+            color: var(--text-dark);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ======= SUMMARY ======= */
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px 35px 20px;
+            border-top: 1px solid var(--border);
+            gap: 30px;
+        }
+
+        .terms-col {
+            flex: 1;
+        }
+
+        .terms-col h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gold-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .terms-col p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .signature-box {
+            margin-top: 25px;
+            display: inline-block;
+        }
+
+        .signature-line {
+            width: 140px;
+            height: 1px;
+            background-color: var(--border);
+            margin-bottom: 6px;
+        }
+
+        .signature-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .totals-col {
+            width: 260px;
+            flex-shrink: 0;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .total-line .tl-value {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .grand-total-box {
+            margin-top: 12px;
+            background: var(--gold);
+            border-radius: 6px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grand-total-box .gt-label {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--text-dark);
+        }
+
+        .grand-total-box .gt-value {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text-dark);
+            letter-spacing: 0.5px;
+        }
+
+        /* ======= FOOTER BAR ======= */
+        .gold-divider {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 50%, transparent 100%);
+        }
+
+        .footer-bar {
+            background-color: var(--bg-main);
+            padding: 16px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .contact-block p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.9;
+        }
+
+        .contact-block p span {
+            color: var(--gold-dark);
+            font-weight: 700;
+        }
+
+        .qr-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qr-block img {
+            width: 75px;
+            height: 75px;
+            border-radius: 8px;
+            background: white;
+            padding: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .qr-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .thank-you-stamp {
+            font-size: 11px;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            background-color: var(--bg-card);
+            border-radius: 4px;
+            padding: 8px 14px;
+            text-align: center;
+            max-width: 180px;
+            line-height: 1.6;
+        }
+
+        .thank-you-stamp strong {
+            display: block;
+            color: var(--gold-dark);
+            font-size: 13px;
+        }
+
+        /* ======= PAGE INDICATOR ======= */
+        .page-indicator {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 4px 35px;
+            background: var(--bg-card);
+        }
+
+        /* ======= PRINT ======= */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .invoice-page {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+                min-height: 100vh;
+                /* Fits exact length of one printed page dynamically */
+                page-break-after: always;
+            }
+
+            .invoice-page:last-child {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="invoice-container"></div>
+
+    <script>
+        // ╔══════════════════════════════════════════════════════════════════╗
+        // ║              منطقة حقن البيانات من n8n                          ║
+        // ║  ضع تعبيرات n8n هنا فقط — لا تعدّل أي شيء خارج هذا القسم       ║
+        // ║                                                                  ║
+        // ║  ملاحظة: لكي لا يظهر خطأ Syntax في المحرر، تم وضع جميع          ║
+        // ║          القيم داخل علامتَي تنصيص " "                           ║
+        // ╚══════════════════════════════════════════════════════════════════╝
+
+        const DATA = {
+            invoice_no: `{{ $('Code in JavaScript2').item.json.invoice_number || "" }}`,
+            customer_name: `{{ $json.output.customer_name || "" }}`,
+            customer_phone: `{{ $json.output.customer_phone || "" }}`,
+            customer_address: `{{ $json.output.customer_address || "" }}`,
+            currency_type: `{{ $json.output.currency_type || "ريال" }}`,
+            total_amount: `{{ $json.output.total_amount || 0 }}`,
+            paid_amount: `{{ $json.output.paid_amount || 0 }}`,
+            remaining_amount: `{{ $json.output.remaining_amount || 0 }}`,
+            payment_status: `{{ $json.output.payment_status || "Credit" }}`,
+            items: `{{ JSON.stringify($json.output.items || []) }}`,
+            main_color: `{{ $('Get row(s) in sheet3').item.json['لون الرئيسي'] || "" }}`,
+            logo_url: `{{ $('Get row(s) in sheet3').item.json['الشعار'] || "" }}`,
+            business_name: `{{ $('Get row(s) in sheet3').item.json['اسم العمل'] || "" }}`,
+            business_phone: `{{ $('Get row(s) in sheet3').item.json['رقم العميل'] || "" }}`,
+            business_address: `{{ $('Get row(s) in sheet3').item.json['العنوان'] || "" }}`,
+            commercial_register: `{{ $('Get row(s) in sheet3').item.json['السجل التجاري'] || "" }}`,
+            website_url: `{{ $('Get row(s) in sheet3').item.json['الموقع'] || "" }}`,
+            terms_and_conditions: `{{ $('Get row(s) in sheet3').item.json['الشروط والأحكام'] || "" }}`
+        };
+
+        // ═══════════════════════════════════════════════════════════════════
+        //   لا تعدّل ما تحت هذا السطر
+        // ═══════════════════════════════════════════════════════════════════
+
+        const _isEmpty = v => v === null || v === undefined || v.toString().trim() === '' || v.toString().includes('{{');
+
+        if (!_isEmpty(DATA.main_color)) {
+            let colorHex = DATA.main_color.trim();
+            if (!colorHex.startsWith('#')) {
+                colorHex = '#' + colorHex;
+            }
+            document.documentElement.style.setProperty('--gold', colorHex);
+            document.documentElement.style.setProperty('--gold-dark', colorHex);
+        }
+
+        if (!_isEmpty(DATA.logo_url)) {
+            document.documentElement.style.setProperty('--watermark-url', `url('${DATA.logo_url}')`);
+        }
+
+        let parsedItems = [];
+        if (!_isEmpty(DATA.items)) {
+            try {
+                parsedItems = JSON.parse(DATA.items);
+            } catch (e) {
+                parsedItems = [];
+            }
+        }
+
+        const invoiceData = {
+            invoiceNo: !_isEmpty(DATA.invoice_no) ? (DATA.invoice_no.toString().startsWith('#') ? DATA.invoice_no : '#' + DATA.invoice_no) : ('#' + String(Date.now()).slice(-4)),
+            date: new Date().toLocaleDateString('ar-YE'),
+            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('ar-YE'),
+            seller: _isEmpty(DATA.business_name) ? 'النجاح للطاقة الشمسية' : DATA.business_name,
+            customer: {
+                name: _isEmpty(DATA.customer_name) ? 'عميل' : DATA.customer_name,
+                contact: _isEmpty(DATA.customer_phone) ? '' : ('📞 ' + DATA.customer_phone),
+                hasContact: !_isEmpty(DATA.customer_phone)
+            },
+            currency: _isEmpty(DATA.currency_type) ? 'ريال' : DATA.currency_type,
+            items: (Array.isArray(parsedItems) ? parsedItems : []).map(function (i) {
+                return {
+                    name: i.name || '',
+                    unitPrice: i.qty ? Math.round((i.total / i.qty) * 100) / 100 : i.total,
+                    qty: i.qty || 1,
+                    total: i.total || 0
+                };
+            }),
+            totalAmount: _isEmpty(DATA.total_amount) ? 0 : Number(DATA.total_amount) || 0,
+            paidAmount: _isEmpty(DATA.paid_amount) ? 0 : Number(DATA.paid_amount) || 0,
+            remainingAmount: _isEmpty(DATA.remaining_amount) ? 0 : Number(DATA.remaining_amount) || 0,
+            paymentStatus: _isEmpty(DATA.payment_status) ? 'Credit' : DATA.payment_status,
+            logoUrl: _isEmpty(DATA.logo_url) ? "https://i.ibb.co/wNYcY6C9/modern-solar-battery-logo-1774880020098.jpg" : DATA.logo_url,
+            businessPhone: _isEmpty(DATA.business_phone) ? "777777777" : DATA.business_phone,
+            businessAddress: _isEmpty(DATA.business_address) ? "سيئون - حضرموت - الجمهورية اليمنية" : DATA.business_address,
+            commercialRegister: _isEmpty(DATA.commercial_register) ? "" : DATA.commercial_register,
+            websiteUrl: _isEmpty(DATA.website_url) ? "" : DATA.website_url,
+            terms: _isEmpty(DATA.terms_and_conditions) ? "جميع المنتجات مكفولة. في حال وجود أي ملاحظة أو عيب يرجى التواصل خلال 7 أيام من تاريخ استلام الطلب. لا يحق إرجاع المنتجات بعد التركيب. الأسعار شاملة وغير خاضعة للضريبة." : DATA.terms_and_conditions,
+            discount: 0,
+            tax: 0
+        };
+        // ═══════════════════════════════════════════════════════════════════
+
+        const SPLIT_THRESHOLD = 10;  // عند تجاوز هذا الرقم تُنشأ صفحة جديدة
+        const ITEMS_PER_PAGE = 16;  // أقصى عدد منتجات في الصفحة الواحدة
+        const MIN_LAST_PAGE = 3;   // أقل عدد مسموح به في الصفحة الأخيرة
+
+        // ========= مولّد الهيدر =========
+        function buildHeader(data) {
+            return `
+            <div class="invoice-header">
+                <div class="header-diagonal"></div>
+                <div class="logo-area">
+                    <img src="${data.logoUrl}" alt="Logo">
+                    <div class="logo-text">${data.seller}</div>
+                </div>
+                <div class="invoice-title-area">
+                    <h1>فاتورة</h1>
+                    <div class="invoice-meta-grid">
+                        <span class="label">رقم الفاتورة</span><span class="value">${data.invoiceNo}</span>
+                        <span class="label">التاريخ</span><span class="value">${data.date}</span>
+                        <span class="label">تاريخ الاستحقاق</span><span class="value">${data.dueDate}</span>
+                        <span class="label">البائع</span><span class="value">${data.seller}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gold-divider"></div>`;
+        }
+
+        // ========= مولّد بيانات العميل =========
+        function buildInfoRow(data) {
+            let statusText = '';
+            if (data.paymentStatus === 'Paid') {
+                statusText = '<span style="color:#28a745; font-weight:700;">مدفوع بالكامل</span>';
+            } else if (data.paymentStatus === 'Partial') {
+                statusText = '<span style="color:#ff8c00; font-weight:700;">مدفوع جزئياً</span>';
+            } else {
+                statusText = '<span style="color:#dc3545; font-weight:700;">آجل / غير مدفوع</span>';
+            }
+
+            return `
+            <div class="info-row">
+                <div class="invoice-to-block">
+                    <div class="block-label">فاتورة إلى</div>
+                    <div class="customer-name-display">${data.customer.name}</div>
+                    ${data.customer.hasContact ? `<div class="customer-contact">${data.customer.contact}</div>` : ''}
+                    <div class="customer-sub">عميلنا العزيز، شكراً لاختيارك ${data.seller}.</div>
+                </div>
+                <div class="payment-info-block">
+                    <div class="block-label" style="text-align:left; border-right:none; border-left:3px solid var(--gold); padding-right:0; padding-left:8px;">معلومات الدفع</div>
+                    <div class="payment-grid">
+                        <span class="pg-label">طريقة الدفع:</span><span class="pg-value">تحويل بنكي / نقدي</span>
+                        <span class="pg-label">حالة الدفع:</span><span class="pg-value">${statusText}</span>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // ========= مولّد صفوف الجدول =========
+        function buildTableRows(items) {
+            return items.map((item, i) => `
+                <tr>
+                    <td><span class="item-index">${String(item.globalIndex).padStart(2, '0')}</span></td>
+                    <td>${item.name}</td>
+                    <td style="text-align:center;">${item.unitPrice.toLocaleString('ar')}</td>
+                    <td style="text-align:center; font-weight:700;">${item.qty}</td>
+                    <td style="text-align:left;">${item.total.toLocaleString('ar')}</td>
+                </tr>`).join('');
+        }
+
+        // ========= مولّد الجدول =========
+        function buildTable(items, currency) {
+            return `
+            <div class="table-section">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم المنتج / الخدمة</th>
+                            <th style="text-align:center; width:120px;">سعر الوحدة</th>
+                            <th style="text-align:center; width:70px;">الكمية</th>
+                            <th style="text-align:left; width:110px;">الإجمالي (${currency})</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${buildTableRows(items)}
+                    </tbody>
+                </table>
+            </div>`;
+        }
+
+        // ========= مولّد الإجماليات (الصفحة الأخيرة فقط) =========
+        function buildSummary(data) {
+            return `
+            <div class="summary-row">
+                <div class="terms-col">
+                    <h4>الشروط والأحكام</h4>
+                    <p>${data.terms}</p>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">توقيع المفوض</div>
+                    </div>
+                </div>
+                <div class="totals-col">
+                    <div class="total-line"><span>المبلغ المدفوع:</span><span class="tl-value" style="color: #28a745;">${data.paidAmount.toLocaleString('ar')} ${data.currency}</span></div>
+                    <div class="total-line"><span>المبلغ المتبقي:</span><span class="tl-value" style="color: #dc3545;">${data.remainingAmount.toLocaleString('ar')} ${data.currency}</span></div>
+                    <div class="grand-total-box">
+                        <span class="gt-label">الإجمالي الكلي</span>
+                        <span class="gt-value">${data.totalAmount.toLocaleString('ar')} ${data.currency}</span>
+                    </div>
+                </div>
+            </div>`;
+        }
+        // ========= مولّد الفوتر =========
+        function buildFooter(data) {
+            const phone = data.businessPhone.toString().replace(/\+/g, '').replace(/\s/g, '');
+            const waUrl = "https://wa.me/" + phone;
+            const qrSrc = "https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=" + encodeURIComponent(waUrl);
+            return `
+            <div class="gold-divider"></div>
+            <div class="footer-bar">
+                <div class="contact-block">
+                    <p>📍 <span>العنوان:</span> ${data.businessAddress}</p>
+                    <p>📞 <span>الهاتف:</span> ${data.businessPhone}</p>
+                    ${_isEmpty(data.commercialRegister) ? '' : `<p>🏢 <span>السجل التجاري:</span> ${data.commercialRegister}</p>`}
+                    ${_isEmpty(data.websiteUrl) ? '' : `<p>🌐 <span>الموقع:</span> ${data.websiteUrl}</p>`}
+                </div>
+                <div class="thank-you-stamp">
+                    <strong>شكراً لتعاملكم معنا</strong>
+                    نسعد بخدمتكم دائماً<br>${data.seller}
+                </div>
+                <div class="qr-block">
+                    <img src="${qrSrc}" alt="QR واتساب">
+                    <div class="qr-label">امسح للتواصل عبر واتساب</div>
+                </div>
+            </div>`;
+        }
+
+        // ========= خوارزمية التقسيم الذكي =========
+        function paginateItems(items) {
+            // أقل من أو يساوي حد الانقسام → صفحة واحدة فقط
+            if (items.length <= SPLIT_THRESHOLD) {
+                return [items];
+            }
+
+            const pages = [];
+            let remaining = [...items];
+
+            while (remaining.length > 0) {
+                if (remaining.length <= SPLIT_THRESHOLD) {
+                    // ما تبقى ضمن الحد → صفحة أخيرة
+                    pages.push(remaining);
+                    remaining = [];
+                } else {
+                    // خذ بحد أقصى ITEMS_PER_PAGE مع ضمان MIN_LAST_PAGE للصفحة القادمة
+                    const takeNow = Math.min(remaining.length - MIN_LAST_PAGE, ITEMS_PER_PAGE);
+                    pages.push(remaining.slice(0, takeNow));
+                    remaining = remaining.slice(takeNow);
+                }
+            }
+
+            return pages;
+        }
+
+        // ========= التقسيم وبناء الصفحات =========
+        function buildInvoice(data) {
+            const container = document.getElementById('invoice-container');
+            const items = data.items.map((item, i) => ({ ...item, globalIndex: i + 1 }));
+            const pages = paginateItems(items);
+            const totalPages = pages.length;
+
+            pages.forEach((pageItems, p) => {
+                const isLastPage = p === totalPages - 1;
+
+                const page = document.createElement('div');
+                page.className = 'invoice-page';
+
+                page.innerHTML =
+                    buildHeader(data) +
+                    buildInfoRow(data) +
+                    buildTable(pageItems, data.currency) +
+                    (isLastPage ? buildSummary(data) : '') +
+                    (totalPages > 1 ? `<div class="page-indicator">صفحة ${p + 1} من ${totalPages}</div>` : '') +
+                    buildFooter(data);
+
+                container.appendChild(page);
+            });
+        }
+
+        buildInvoice(invoiceData);
+    </script>
+</body>
+
+</html>

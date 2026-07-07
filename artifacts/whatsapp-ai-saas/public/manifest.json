@@ -1,0 +1,40 @@
+{
+  "name": "وكيل المبيعات",
+  "short_name": "وكيل",
+  "description": "منصة أتمتة مبيعات واتساب بالذكاء الاصطناعي",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#16a34a",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "المحادثات",
+      "url": "/conversations",
+      "description": "فتح المحادثات"
+    },
+    {
+      "name": "لوحة التحكم",
+      "url": "/dashboard",
+      "description": "فتح لوحة التحكم"
+    }
+  ]
+}

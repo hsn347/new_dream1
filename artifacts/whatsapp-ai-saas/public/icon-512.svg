@@ -1,0 +1,26 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background (maskable: safe area is centered 80%) -->
+  <rect width="512" height="512" rx="112" fill="#16a34a"/>
+  <!-- Bot head -->
+  <rect x="138" y="138" width="236" height="192" rx="48" fill="white" fill-opacity="0.95"/>
+  <!-- Eyes -->
+  <circle cx="202" cy="228" r="30" fill="#16a34a"/>
+  <circle cx="310" cy="228" r="30" fill="#16a34a"/>
+  <!-- Eye shine -->
+  <circle cx="211" cy="219" r="11" fill="white"/>
+  <circle cx="319" cy="219" r="11" fill="white"/>
+  <!-- Antenna -->
+  <rect x="240" y="72" width="32" height="76" rx="16" fill="white" fill-opacity="0.95"/>
+  <circle cx="256" cy="76" r="26" fill="white" fill-opacity="0.95"/>
+  <circle cx="256" cy="76" r="14" fill="#16a34a"/>
+  <!-- Smile -->
+  <rect x="202" y="282" width="108" height="22" rx="11" fill="#16a34a" fill-opacity="0.5"/>
+  <!-- Chat bubble body -->
+  <rect x="112" y="362" width="288" height="96" rx="48" fill="white" fill-opacity="0.9"/>
+  <!-- Chat bubble tail -->
+  <path d="M180 458 L156 496 L220 458" fill="white" fill-opacity="0.9"/>
+  <!-- Dots in chat -->
+  <circle cx="196" cy="410" r="13" fill="#16a34a"/>
+  <circle cx="256" cy="410" r="13" fill="#16a34a"/>
+  <circle cx="316" cy="410" r="13" fill="#16a34a"/>
+</svg>
