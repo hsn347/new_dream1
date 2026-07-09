@@ -26,7 +26,7 @@ export default function Login() {
     try {
       const success = await login(email, password);
       if (success) {
-        const me = await fetch("/api/auth/me", { credentials: "include" }).then(r => r.json()) as { role?: string } | null;
+        const me = await fetch("https://new-dream1-1.onrender.com/api/auth/me", { credentials: "include" }).then(r => r.json()) as { role?: string } | null;
         setLocation(me?.role === "admin" ? "/admin/keys" : "/dashboard");
       } else {
         setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");

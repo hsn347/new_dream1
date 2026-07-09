@@ -35,7 +35,7 @@ export function usePushNotifications() {
   const subscribe = useCallback(async (): Promise<boolean> => {
     try {
       setStatus("loading");
-      const res = await fetch("/api/user/push/vapid-public-key", { credentials: "include" });
+      const res = await fetch("https://new-dream1-1.onrender.com/api/user/push/vapid-public-key", { credentials: "include" });
       const { publicKey } = await res.json() as { publicKey: string };
 
       const reg = await navigator.serviceWorker.ready;
@@ -44,7 +44,7 @@ export function usePushNotifications() {
         applicationServerKey: urlBase64ToUint8Array(publicKey),
       });
 
-      await fetch("/api/user/push/subscribe", {
+      await fetch("https://new-dream1-1.onrender.com/api/user/push/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -63,7 +63,7 @@ export function usePushNotifications() {
   const unsubscribe = useCallback(async (): Promise<void> => {
     if (!subscription) return;
     try {
-      await fetch("/api/user/push/unsubscribe", {
+      await fetch("https://new-dream1-1.onrender.com/api/user/push/unsubscribe", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

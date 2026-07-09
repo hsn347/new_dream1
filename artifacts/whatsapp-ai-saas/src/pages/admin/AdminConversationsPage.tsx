@@ -38,27 +38,27 @@ interface UserOption {
 
 /* ─── API helpers ────────────────────────────────────────────── */
 async function fetchUsers(): Promise<UserOption[]> {
-  const r = await fetch("/api/admin/users", { credentials: "include" });
+  const r = await fetch("https://new-dream1-1.onrender.com/api/admin/users", { credentials: "include" });
   if (!r.ok) return [];
   const data = await r.json() as Array<{ id: number; email: string; name?: string }>;
   return data;
 }
 
 async function fetchConversations(userId?: number): Promise<AdminConv[]> {
-  const url = userId ? `/api/admin/conversations?userId=${userId}` : "/api/admin/conversations";
+  const url = userId ? `https://new-dream1-1.onrender.com/api/admin/conversations?userId=${userId}` : "https://new-dream1-1.onrender.com/api/admin/conversations";
   const r = await fetch(url, { credentials: "include" });
   if (!r.ok) return [];
   return r.json() as Promise<AdminConv[]>;
 }
 
 async function fetchMessages(convId: number): Promise<Message[]> {
-  const r = await fetch(`/api/admin/conversations/${convId}/messages`, { credentials: "include" });
+  const r = await fetch(`https://new-dream1-1.onrender.com/api/admin/conversations/${convId}/messages`, { credentials: "include" });
   if (!r.ok) return [];
   return r.json() as Promise<Message[]>;
 }
 
 async function injectMessage(convId: number, text: string): Promise<{ ok: boolean; sent: boolean }> {
-  const r = await fetch(`/api/admin/conversations/${convId}/inject`, {
+  const r = await fetch(`https://new-dream1-1.onrender.com/api/admin/conversations/${convId}/inject`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -68,7 +68,7 @@ async function injectMessage(convId: number, text: string): Promise<{ ok: boolea
 }
 
 async function togglePause(convId: number): Promise<{ agentPaused: boolean }> {
-  const r = await fetch(`/api/admin/conversations/${convId}/pause`, {
+  const r = await fetch(`https://new-dream1-1.onrender.com/api/admin/conversations/${convId}/pause`, {
     method: "PATCH",
     credentials: "include",
   });

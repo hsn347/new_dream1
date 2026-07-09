@@ -1,4 +1,4 @@
-const API_BASE = "/api";
+const API_BASE = "https://new-dream1-1.onrender.com/api";
 
 const inMemoryCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
