@@ -28,7 +28,19 @@ app.use(
 
 app.use(
   cors({
-    origin: true,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like Render health checks) or from allowed origins
+      const allowed = [
+        /\.vercel\.app$/,
+        /\.onrender\.com$/,
+        /^http:\/\/localhost/,
+      ];
+      if (!origin || allowed.some(r => r.test(origin))) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Allow all for now, restrict later if needed
+      }
+    },
     credentials: true,
   }),
 );
@@ -57,8 +69,8 @@ app.use(
     rolling: true,
     cookie: {
       httpOnly: true,
-      secure: process.env["NODE_ENV"] === "production",
-      sameSite: "lax",
+      secure: true, // Required for SameSite: none (cross-domain cookies)
+      sameSite: "none",
       maxAge: 30 * 24 * 60 * 60 * 1000,
     },
   }),
