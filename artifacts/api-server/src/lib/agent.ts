@@ -1027,11 +1027,16 @@ export async function saveDepositMediaLocally(
 }
 
 export function getPublicImageUrl(imageUrl: string): string | null {
+  if (!imageUrl) return null;
+  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    return imageUrl;
+  }
   const domain =
+    process.env["RENDER_EXTERNAL_URL"]?.replace(/^https?:\/\//, "") ??
     process.env["REPLIT_DEV_DOMAIN"] ??
     process.env["REPLIT_DOMAINS"]?.split(",")[0];
-  if (!domain) return null;
-  return `https://${domain}${imageUrl}`;
+  if (!domain) return imageUrl; // Last resort, just return the relative path hoping the client appends domain
+  return `https://${domain.replace(/\/$/, "")}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
 }
 
 /** تحويل رموز العملات لأسماء عربية مقروءة */
