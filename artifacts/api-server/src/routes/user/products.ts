@@ -7,6 +7,7 @@ import { upsertChunk, deleteChunk, getEmbeddingKeyForUser, buildProductChunk } f
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import * as XLSX from "xlsx";
+import { supabase } from "../../lib/supabase.js";
 
 const UPLOADS_DIR = path.join(process.cwd(), "public/uploads");
 
@@ -282,13 +283,29 @@ router.post("/:id/image", async (req, res) => {
     const buffer = Buffer.from(data, "base64");
     const ext = mimeType === "image/png" ? "png" : mimeType === "image/webp" ? "webp" : "jpg";
     const filename = `p-${userId}-${id}-${Date.now()}.${ext}`;
-    await fs.mkdir(UPLOADS_DIR, { recursive: true });
-    await fs.writeFile(path.join(UPLOADS_DIR, filename), buffer);
+    
+    const { error: uploadError } = await supabase.storage
+      .from("products")
+      .upload(filename, buffer, {
+        contentType: mimeType || "image/jpeg",
+        upsert: false
+      });
 
-    const imageUrl = `/api/uploads/${filename}`;
+    if (uploadError) {
+      console.error("Supabase upload error:", uploadError);
+      throw new Error("فشل الرفع");
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("products")
+      .getPublicUrl(filename);
+
+    const imageUrl = publicUrlData.publicUrl;
+
     await db.update(productsTable).set({ imageUrl, updatedAt: new Date() }).where(eq(productsTable.id, id));
     res.json({ imageUrl });
-  } catch {
+  } catch (error) {
+    console.error("Exception in POST /:id/image:", error);
     res.status(500).json({ message: "فشل رفع الصورة" });
   }
 });
