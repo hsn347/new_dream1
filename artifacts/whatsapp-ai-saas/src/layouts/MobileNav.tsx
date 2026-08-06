@@ -66,7 +66,7 @@ export default function MobileNav() {
       {drawerOpen && (
         <div className="md:hidden fixed inset-0 z-50 flex">
           <div className="flex-1 bg-black/40" onClick={() => setDrawerOpen(false)} />
-          <div className="w-72 bg-sidebar h-full flex flex-col overflow-y-auto animate-in slide-in-from-right duration-200">
+          <div className="w-72 bg-sidebar h-full flex flex-col overflow-y-auto animate-in slide-in-from-left duration-200">
             <div className="flex items-center justify-between px-5 py-4 border-b border-sidebar-border">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-sidebar-primary flex items-center justify-center">
