@@ -139,6 +139,7 @@ export default function SettingsPage() {
   const [knownGroups, setKnownGroups] = useState<GroupConversation[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+  const lastFocusedInput = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     Promise.all([
@@ -559,14 +560,29 @@ export default function SettingsPage() {
             <div className="px-5 py-4 space-y-4">
               <div className="bg-muted/40 border border-border rounded-xl px-4 py-3">
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  المتغيرات المتاحة:
+                  المتغيرات المتاحة <span className="opacity-70">(اسحب المتغير أو اضغط عليه لإدراجه)</span>:
                   <span className="inline-flex flex-wrap gap-1.5 mt-1.5">
                     {["{{name}}", "{{orderId}}", "{{total}}", "{{address}}"].map((v) => (
                       <code
                         key={v}
                         draggable
                         onDragStart={(e) => e.dataTransfer.setData("text/plain", v)}
-                        className="bg-background border border-border rounded px-1.5 py-0.5 text-[11px] font-mono text-primary cursor-grab active:cursor-grabbing hover:bg-primary/5 transition-colors"
+                        onClick={() => {
+                          const target = lastFocusedInput.current;
+                          if (target) {
+                            const start = parseInt(target.dataset.selStart || target.selectionStart.toString());
+                            const end = parseInt(target.dataset.selEnd || target.selectionEnd.toString());
+                            target.setRangeText(v, start, end, "end");
+                            target.dispatchEvent(new Event("input", { bubbles: true }));
+                            target.dataset.selStart = target.selectionStart.toString();
+                            target.dataset.selEnd = target.selectionEnd.toString();
+                            toast({ title: `تم إدراج المتغير ${v}` });
+                          } else {
+                            navigator.clipboard.writeText(v);
+                            toast({ title: `تم نسخ المتغير ${v} للحافظة` });
+                          }
+                        }}
+                        className="bg-background border border-border rounded px-2 py-1 text-[11px] font-mono text-primary cursor-pointer hover:bg-primary/5 transition-all active:scale-95"
                       >
                         {v}
                       </code>
@@ -577,6 +593,11 @@ export default function SettingsPage() {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1.5">✅ رسالة قبول الطلب</label>
                 <textarea rows={4}
+                  onFocus={(e) => { lastFocusedInput.current = e.target; }}
+                  onBlur={(e) => {
+                    e.target.dataset.selStart = e.target.selectionStart.toString();
+                    e.target.dataset.selEnd = e.target.selectionEnd.toString();
+                  }}
                   value={form.approvedOrderMessage ?? ""}
                   onChange={(e) => set("approvedOrderMessage", e.target.value || null)}
                   placeholder={`✅ تم قبول طلبك #{{orderId}}\nمرحباً {{name}}، الإجمالي: {{total}}\nسيتم التواصل معك قريباً 🙏`}
@@ -586,6 +607,11 @@ export default function SettingsPage() {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1.5">🚚 رسالة التوصيل</label>
                 <textarea rows={4}
+                  onFocus={(e) => { lastFocusedInput.current = e.target; }}
+                  onBlur={(e) => {
+                    e.target.dataset.selStart = e.target.selectionStart.toString();
+                    e.target.dataset.selEnd = e.target.selectionEnd.toString();
+                  }}
                   value={form.deliveredOrderMessage ?? ""}
                   onChange={(e) => set("deliveredOrderMessage", e.target.value || null)}
                   placeholder={`🚚 تم توصيل طلبك #{{orderId}}\nمرحباً {{name}}، نتمنى رضاك!\nشكراً لثقتك ⭐`}
