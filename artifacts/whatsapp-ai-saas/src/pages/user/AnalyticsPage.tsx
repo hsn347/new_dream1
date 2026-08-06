@@ -201,14 +201,21 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {loading && (
-        <div className="py-24 flex flex-col items-center gap-3 text-muted-foreground">
-          <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm">جاري تحميل البيانات...</p>
+      {loading ? (
+        <div className="py-32 flex flex-col items-center justify-center gap-6">
+          <div className="relative w-12 h-12 flex items-center justify-center">
+            {/* توهج خلفي */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary to-emerald-400 rounded-2xl animate-[spin_3s_linear_infinite] opacity-30 blur-xl" />
+            {/* المربع المتحرك الأساسي */}
+            <div className="relative w-8 h-8 bg-gradient-to-tr from-primary to-emerald-400 rounded-lg animate-[spin_1.5s_cubic-bezier(0.68,-0.55,0.26,1.55)_infinite] shadow-lg shadow-primary/20" />
+            {/* نقطة داخلية */}
+            <div className="absolute w-2 h-2 bg-white rounded-full animate-pulse" />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground animate-pulse tracking-wide">
+            جاري تهيئة البيانات...
+          </p>
         </div>
-      )}
-
-      {!loading && data && (
+      ) : (
         <>
           {/* ── Stats ─────────────────────────────────────────── */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
