@@ -492,12 +492,15 @@ router.get("/analytics", async (req, res) => {
   const completedStatuses = ["approved", "delivered"];
   const activeOrders = allOrders.filter(o => !["cancelled", "rejected"].includes(o.status));
   const prevActiveOrders = prevOrders.filter(o => !["cancelled", "rejected"].includes(o.status));
+  
+  const completedOrders = allOrders.filter(o => completedStatuses.includes(o.status));
+  const prevCompletedOrders = prevOrders.filter(o => completedStatuses.includes(o.status));
 
-  const totalRevenue = activeOrders.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
-  const prevRevenue = prevActiveOrders.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
+  const totalRevenue = completedOrders.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
+  const prevRevenue = prevCompletedOrders.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
   const revenueGrowth = prevRevenue === 0 ? 0 : ((totalRevenue - prevRevenue) / prevRevenue) * 100;
-  const ordersGrowth = prevActiveOrders.length === 0 ? 0 : ((activeOrders.length - prevActiveOrders.length) / prevActiveOrders.length) * 100;
-  const avgOrderValue = activeOrders.length > 0 ? (totalRevenue / activeOrders.length).toFixed(2) : "0";
+  const ordersGrowth = prevCompletedOrders.length === 0 ? 0 : ((completedOrders.length - prevCompletedOrders.length) / prevCompletedOrders.length) * 100;
+  const avgOrderValue = completedOrders.length > 0 ? (totalRevenue / completedOrders.length).toFixed(2) : "0";
 
   const convIds = new Set(allOrders.map(o => o.conversationId).filter(Boolean));
   const conversionsWithOrders = convIds.size;
@@ -514,7 +517,9 @@ router.get("/analytics", async (req, res) => {
     const key = o.createdAt.toISOString().split("T")[0]!;
     if (dailyMap[key]) {
       dailyMap[key]!.orders++;
-      dailyMap[key]!.revenue += parseFloat(o.total) || 0;
+      if (completedStatuses.includes(o.status)) {
+        dailyMap[key]!.revenue += parseFloat(o.total) || 0;
+      }
     }
   }
   const dailyData = Object.entries(dailyMap).map(([date, v]) => ({

@@ -127,8 +127,8 @@ export async function buildAndSendReport(userId: number, period: ReportPeriod): 
     ]);
 
     // ── Metrics ──────────────────────────────────────────────────────────────
-    const completed = currentOrders.filter(o => !["draft", "cancelled"].includes(o.status));
-    const prevCompleted = prevOrders.filter(o => !["draft", "cancelled"].includes(o.status));
+    const completed = currentOrders.filter(o => ["approved", "delivered"].includes(o.status));
+    const prevCompleted = prevOrders.filter(o => ["approved", "delivered"].includes(o.status));
 
     const currentRevenue = completed.reduce((s, o) => s + parseFloat(o.total || "0"), 0);
     const prevRevenue    = prevCompleted.reduce((s, o) => s + parseFloat(o.total || "0"), 0);

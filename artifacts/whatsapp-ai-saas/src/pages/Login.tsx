@@ -98,7 +98,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 flex items-center text-muted-foreground hover:text-foreground transition-colors end-3"
+                    className="absolute inset-y-0 flex items-center text-muted-foreground hover:text-black transition-colors end-3"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -175,7 +175,7 @@ export default function Login() {
 
         {/* Top: brand + AI badge */}
         <div className="z-10 relative flex justify-between items-start">
-          <div className="inline-flex items-center gap-1.5 bg-sidebar-accent px-3 py-1.5 border border-sidebar-border rounded-full font-medium text-sidebar-foreground text-xs">
+          <div className="inline-flex items-center">
  
           </div>
           <div className="flex items-center gap-3">
