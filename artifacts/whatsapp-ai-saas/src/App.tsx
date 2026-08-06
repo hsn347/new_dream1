@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ConfirmProvider } from "@/contexts/ConfirmContext";
 import { useAuth } from "@/hooks/useAuth";
 import { Component, type ReactNode } from "react";
 
@@ -90,20 +91,28 @@ function ProtectedRoute({ children, requireAdmin = false }: { children: React.Re
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-muted-foreground">جاري التحميل...</p>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-muted-foreground font-medium animate-pulse">جاري تسجيل الدخول...</p>
       </div>
     );
   }
 
-  if (!user) return <Redirect to="/login" />;
-  if (requireAdmin && user.role !== "admin") return <Redirect to="/dashboard" />;
-  if (!requireAdmin && user.role === "admin" && location === "/dashboard") return <Redirect to="/admin/keys" />;
+  if (!user) {
+    return <Redirect to="/login" />;
+  }
 
-  return <>{children}</>;
+  if (requireAdmin && user.role !== "admin") {
+    return <Redirect to="/dashboard" />;
+  }
+
+  if (!requireAdmin && user.role === "admin" && location === "/dashboard") {
+    return <Redirect to="/admin/keys" />;
+  }
+
+  const Layout = requireAdmin ? AdminLayout : UserLayout;
+
+  return <Layout>{children}</Layout>;
 }
 
 
@@ -265,12 +274,14 @@ function App() {
       <ThemeProvider>
         <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
           <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <AuthProvider>
-                <AppRoutes />
-              </AuthProvider>
-            </WouterRouter>
-            <Toaster />
+            <ConfirmProvider>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                <AuthProvider>
+                  <AppRoutes />
+                </AuthProvider>
+              </WouterRouter>
+              <Toaster />
+            </ConfirmProvider>
           </TooltipProvider>
         </PersistQueryClientProvider>
       </ThemeProvider>

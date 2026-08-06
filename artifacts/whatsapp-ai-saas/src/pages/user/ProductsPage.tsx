@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useConfirm } from "@/contexts/ConfirmContext";
 import { cn } from "@/lib/utils";
 
 const units = ["قطعة", "كيلو", "لتر", "عبوة", "صندوق", "غير ذلك"];
@@ -590,13 +591,21 @@ export default function ProductsPage() {
     }
   };
 
+  const { confirm } = useConfirm();
+
   const handleDelete = async (id: number) => {
-    if (!window.confirm("هل أنت متأكد من رغبتك في حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+    const ok = await confirm({
+      title: "حذف المنتج",
+      description: "هل أنت متأكد من رغبتك في حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء وسيتم إزالته بالكامل.",
+      variant: "destructive"
+    });
+    if (!ok) return;
+
     try {
       await api.user.products.remove(id);
       setProducts(prev => prev.filter(p => p.id !== id));
       setTotal(t => t - 1);
-      toast({ title: "تم حذف المنتج" });
+      toast({ title: "تم حذف المنتج بنجاح" });
     } catch (err) {
       toast({ title: "خطأ في الحذف", description: (err as Error).message, variant: "destructive" });
     }
