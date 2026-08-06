@@ -5,8 +5,9 @@ import {
   ShoppingBag, CheckCircle2, XCircle, Truck, Clock, Ban,
   ChevronDown, ChevronUp, Phone, MapPin, Receipt, Loader2,
   Search, Filter, FileText, Package, RotateCcw, StickyNote,
-  PackageX, AlertCircle, Archive, ArrowRight,
+  User, FilePlus, ChevronLeft, Save,
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import { api, type Return, type ReturnStatus } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -809,9 +810,7 @@ export default function OrdersPage() {
 
       {/* List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
+        <PageLoader text="جاري تحميل الطلبات..." />
       ) : activeList.length === 0 ? (
         <div className="bg-card border border-card-border rounded-2xl p-12 flex flex-col items-center text-center">
           {archiveView

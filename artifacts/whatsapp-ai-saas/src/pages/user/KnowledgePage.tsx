@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { api, type KnowledgeEntry, type KnowledgeEntryPayload } from "@/lib/api";
 import { BookOpen, Plus, Save, Trash2, Pencil, X, Check, Brain, Loader2, RefreshCw } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -162,10 +163,7 @@ export default function KnowledgePage() {
 
       {/* Loading */}
       {loading && (
-        <div className="text-center py-16 text-muted-foreground text-sm flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-primary/40" />
-          <span>جاري تحميل قاعدة المعرفة...</span>
-        </div>
+        <PageLoader text="جاري تحميل قاعدة المعرفة..." />
       )}
 
       {/* Empty state */}

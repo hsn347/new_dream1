@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  Plus, Trash2, Truck, Edit2, X, CheckCircle2, Loader2,
+  Plus, Trash2, Edit2, X, CheckCircle2, Loader2,
   MapPin, Package, AlertCircle, Check,
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import { api, type DeliveryZone } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -379,11 +380,7 @@ export default function DeliveryPage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <PageLoader text="جاري تحميل إعدادات التوصيل..." />;
   }
 
   return (

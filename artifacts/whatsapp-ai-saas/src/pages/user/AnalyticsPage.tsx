@@ -13,6 +13,7 @@ import {
   TrendingUp, TrendingDown, ShoppingBag, MessageCircle,
   DollarSign, Percent, ArrowUpRight, ArrowDownRight, Package, Star,
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 
 type Period = "7" | "30" | "90";
 
@@ -202,19 +203,7 @@ export default function AnalyticsPage() {
       </div>
 
       {loading ? (
-        <div className="py-32 flex flex-col items-center justify-center gap-6">
-          <div className="relative w-12 h-12 flex items-center justify-center">
-            {/* توهج خلفي */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary to-emerald-400 rounded-2xl animate-[spin_3s_linear_infinite] opacity-30 blur-xl" />
-            {/* المربع المتحرك الأساسي */}
-            <div className="relative w-8 h-8 bg-gradient-to-tr from-primary to-emerald-400 rounded-lg animate-[spin_1.5s_cubic-bezier(0.68,-0.55,0.26,1.55)_infinite] shadow-lg shadow-primary/20" />
-            {/* نقطة داخلية */}
-            <div className="absolute w-2 h-2 bg-white rounded-full animate-pulse" />
-          </div>
-          <p className="text-sm font-medium text-muted-foreground animate-pulse tracking-wide">
-            جاري تهيئة البيانات...
-          </p>
-        </div>
+        <PageLoader text="جاري تهيئة البيانات..." />
       ) : (
         <>
           {/* ── Stats ─────────────────────────────────────────── */}

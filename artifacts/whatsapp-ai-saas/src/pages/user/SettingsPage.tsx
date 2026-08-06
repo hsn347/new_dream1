@@ -2,8 +2,9 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import {
   Save, Bot, Check, Sparkles, MessageSquare, TrendingUp,
   Sliders, Loader2, Image, ShoppingBag, Bell, ChevronDown, ChevronUp,
-  BarChart2, Send, Clock, Users, Search, X as XIcon, FileText,
+  BarChart2, Send, Clock, Users, Search, X as XIcon, FileText, Link as LinkIcon, Edit2, Variable, PlayCircle, List, Move
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import SmartPhoneInput from "@/components/SmartPhoneInput";
 import { api, type UserSettings, type GroupConversation } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -256,11 +257,7 @@ export default function SettingsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <PageLoader text="جاري تحميل الإعدادات..." />;
   }
 
   // ---- مكوّنات مساعدة ----

@@ -4,6 +4,7 @@ import {
   CheckCircle2, XCircle, Clock, ChevronDown, ChevronUp, Phone,
   Loader2, Search, Filter, Package, RotateCcw, StickyNote, AlertCircle, ShoppingBag, Plus, Minus, Trash2
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { api, type Return, type ReturnStatus } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -664,9 +665,7 @@ export default function ReturnsPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </div>
+        <PageLoader text="جاري تحميل طلبات الاسترجاع..." />
       ) : filteredReturns.length === 0 ? (
         <div className="bg-card border border-border border-dashed rounded-2xl flex flex-col items-center justify-center py-16 text-center">
           <div className="w-12 h-12 bg-muted rounded-2xl flex items-center justify-center mb-4">

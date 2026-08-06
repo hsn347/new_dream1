@@ -4,6 +4,7 @@ import {
   ShoppingBag, RefreshCw, Package,
   ChevronRight, X, Edit3, Check, Loader2, UserX,
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import { api, type CustomerProfile } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -380,10 +381,7 @@ export default function CustomersPage() {
         {/* List */}
         <div className="flex-1 overflow-y-auto">
           {loading && (
-            <div className="py-16 text-center text-muted-foreground flex flex-col items-center gap-2">
-              <Loader2 className="w-6 h-6 animate-spin opacity-40" />
-              <p className="text-sm">جاري تحميل ملفات العملاء...</p>
-            </div>
+            <PageLoader text="جاري تحميل ملفات العملاء..." />
           )}
           {!loading && filtered.length === 0 && (
             <div className="py-16 text-center text-muted-foreground flex flex-col items-center gap-3">

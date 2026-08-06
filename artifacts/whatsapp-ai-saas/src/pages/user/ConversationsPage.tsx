@@ -5,6 +5,7 @@ import {
   ShoppingBag, X, Loader2, Send, Trash2,
   Clock, MapPin, Package,
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { api, type Conversation, type Message, type CustomerProfile } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -431,10 +432,7 @@ export default function ConversationsPage() {
         {/* List */}
         <div className="flex-1 overflow-y-auto">
           {loading && (
-            <div className="py-12 text-center text-muted-foreground text-sm flex flex-col items-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin opacity-40" />
-              جاري التحميل...
-            </div>
+            <PageLoader text="جاري تحميل المحادثات..." />
           )}
           {!loading && filtered.length === 0 && (
             <div className="py-14 text-center text-muted-foreground flex flex-col items-center gap-2">

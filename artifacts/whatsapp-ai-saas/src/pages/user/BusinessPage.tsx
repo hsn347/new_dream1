@@ -3,8 +3,9 @@ import { api, type Business, type WorkingHour, type Shift, type BankAccount } fr
 import {
   Building2, Plus, Trash2, Save, Check, Phone, GitBranch,
   Share2, Landmark, Clock, Globe, Loader2, Info, ChevronDown, ChevronUp,
-  Upload, ImageIcon,
+  Upload, ImageIcon, Banknote, CalendarDays, ExternalLink, RefreshCw
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/spinner";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -316,11 +317,7 @@ export default function BusinessPage() {
 
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <PageLoader text="جاري تحميل إعدادات المتجر..." />;
   }
 
   const currentTab = TABS.find(t => t.id === tab)!;
