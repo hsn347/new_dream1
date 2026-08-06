@@ -97,14 +97,7 @@ const SEARCH_INDEX: { section: string; terms: string[] }[] = [
       "phone", "whatsapp", "notification",
     ],
   },
-  {
-    section: "prompt",
-    terms: [
-      "موجّه", "موجه", "system prompt", "prompt", "تعليمات",
-      "ذكاء اصطناعي", "AI", "نموذج", "مخصص",
-      "أوامر", "توجيهات", "متقدم", "برومبت",
-    ],
-  },
+
   {
     section: "reports",
     terms: [
@@ -653,35 +646,7 @@ export default function SettingsPage() {
         )}
       </div>}
 
-      {/* ===== 7. موجّه الذكاء الاصطناعي ===== */}
-      {showSection("prompt") && <div className="bg-card border border-card-border rounded-2xl shadow-sm overflow-hidden">
-        <SectionHeader
-          id="prompt" icon={Sparkles}
-          iconBg="bg-amber-500/10" iconColor="text-amber-500"
-          title="الموجّه المخصص (System Prompt)"
-          desc="تعليمات إضافية مباشرة للذكاء الاصطناعي"
-        />
-        {isSectionOpen("prompt") && (
-          <div className="border-t border-border p-5 space-y-4">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3">
-              <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
-                هذا الحقل لمستخدمي الذكاء الاصطناعي المتقدمين — أضف توجيهات خاصة تُرسل مباشرة للنموذج في كل محادثة.
-                اتركه فارغاً للعمل بالتوجيهات الافتراضية المثبّتة.
-              </p>
-            </div>
-            <textarea
-              rows={6}
-              value={form.systemPrompt ?? ""}
-              onChange={(e) => set("systemPrompt", e.target.value || null)}
-              placeholder="مثال: أجب دائماً بالعربية الفصحى الموجزة. لا تذكر الأسعار بشكل مباشر إلا إذا سأل العميل صراحةً..."
-              className="w-full px-4 py-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none leading-relaxed font-mono"
-            />
-            <div className="flex justify-end">
-              <SaveBtn sectionId="prompt" />
-            </div>
-          </div>
-        )}
-      </div>}
+
 
       {/* ===== 8. التقارير الذكية ===== */}
       {showSection("reports") && <div className="bg-card border border-card-border rounded-2xl shadow-sm overflow-hidden">
