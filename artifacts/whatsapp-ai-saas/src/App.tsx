@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { useAuth } from "@/hooks/useAuth";
+import { Component, type ReactNode } from "react";
 
 import AdminLayout from "@/layouts/AdminLayout";
 import UserLayout from "@/layouts/UserLayout";
@@ -32,18 +33,55 @@ import SettingsPage from "@/pages/user/SettingsPage";
 import AnalyticsPage from "@/pages/user/AnalyticsPage";
 import ReturnsPage from "@/pages/user/ReturnsPage";
 
+// ── Error Boundary: catches any rendering crash gracefully ────────────────────
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-background p-4" dir="rtl">
+          <div className="text-center space-y-4">
+            <div className="text-4xl">⚠️</div>
+            <h2 className="text-xl font-bold text-foreground">حدث خطأ في الصفحة</h2>
+            <p className="text-muted-foreground text-sm">{this.state.error?.message}</p>
+            <button
+              onClick={() => { this.setState({ hasError: false, error: null }); window.location.reload(); }}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm"
+            >
+              إعادة تحميل الصفحة
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours caching
-      staleTime: 1000 * 60 * 5, // 5 minutes freshness
+      gcTime: 1000 * 60 * 60 * 24,    // 24h in garbage-collection cache
+      staleTime: 1000 * 60 * 15,      // 15 min freshness (was 5 min)
       refetchOnWindowFocus: false,
+      retry: (failureCount, error) => {
+        // Don't retry on auth errors
+        if (error instanceof Error && error.message.includes("401")) return false;
+        return failureCount < 2;
+      },
     },
   },
 });
 
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
+  throttleTime: 1000,
 });
 
 function ProtectedRoute({ children, requireAdmin = false }: { children: React.ReactNode; requireAdmin?: boolean }) {
@@ -223,18 +261,20 @@ function AppRoutes() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <AuthProvider>
-              <AppRoutes />
-            </AuthProvider>
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
-      </PersistQueryClientProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <AuthProvider>
+                <AppRoutes />
+              </AuthProvider>
+            </WouterRouter>
+            <Toaster />
+          </TooltipProvider>
+        </PersistQueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

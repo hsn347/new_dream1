@@ -1,7 +1,68 @@
 const API_BASE = "https://new-dream1-1.onrender.com/api";
 
 const inMemoryCache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
+const CACHE_TTL = 1000 * 60 * 15; // 15 minutes (was 5)
+
+// Map of write endpoints to which read caches they should invalidate
+const INVALIDATION_MAP: Record<string, string[]> = {
+  "/admin/keys":       ["/admin/keys"],
+  "/admin/users":      ["/admin/users", "/user/dashboard"],
+  "/admin/settings":   ["/admin/settings"],
+  "/admin/admins":     ["/admin/admins"],
+  "/user/products":    ["/user/products", "/user/dashboard"],
+  "/user/coupons":     ["/user/coupons"],
+  "/user/business":    ["/user/business"],
+  "/user/knowledge":   ["/user/knowledge"],
+  "/user/delivery":    ["/user/delivery"],
+  "/user/orders":      ["/user/orders", "/user/dashboard"],
+  "/user/returns":     ["/user/returns", "/user/dashboard"],
+  "/user/customers":   ["/user/customers"],
+  "/user/broadcast":   ["/user/broadcast"],
+  "/user/settings":    ["/user/settings"],
+  "/user/whatsapp":    ["/user/settings"],
+  "/user/notifications": ["/user/notifications"],
+};
+
+function invalidateRelatedCache(path: string) {
+  // Find the base path (remove IDs)
+  const basePath = path.replace(/\/\d+/g, "").split("?")[0];
+  
+  // Find matching invalidation rules
+  let invalidated = false;
+  for (const [pattern, targets] of Object.entries(INVALIDATION_MAP)) {
+    if (basePath.startsWith(pattern) || basePath === pattern) {
+      for (const target of targets) {
+        // Remove all cache entries starting with this target
+        for (const key of inMemoryCache.keys()) {
+          if (key.includes(target)) inMemoryCache.delete(key);
+        }
+        try {
+          const keysToRemove: string[] = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k?.startsWith("apiCache:") && k.includes(target)) keysToRemove.push(k);
+          }
+          keysToRemove.forEach(k => localStorage.removeItem(k));
+        } catch {}
+      }
+      invalidated = true;
+      break;
+    }
+  }
+  
+  // Fallback: if no matching rule, clear everything
+  if (!invalidated) {
+    inMemoryCache.clear();
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key?.startsWith("apiCache:")) keysToRemove.push(key);
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+    } catch {}
+  }
+}
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const method = options?.method || "GET";
@@ -22,6 +83,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
       return cached.data as T;
     }
   }
+
 
   const res = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json" },
@@ -44,16 +106,8 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
       localStorage.setItem(cacheKey, JSON.stringify(cacheObj));
     } catch { }
   } else if (!isGet) {
-    // Clear cache on mutations
-    inMemoryCache.clear();
-    try {
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key?.startsWith("apiCache:")) keysToRemove.push(key);
-      }
-      keysToRemove.forEach(k => localStorage.removeItem(k));
-    } catch { }
+    // Smart cache invalidation: only clear caches related to the mutated endpoint
+    invalidateRelatedCache(path);
   }
 
   return data as T;

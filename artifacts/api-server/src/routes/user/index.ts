@@ -41,59 +41,65 @@ router.use("/push", pushSubscriptionsRouter);
 
 router.get("/dashboard", async (req, res) => {
   const userId = req.session.userId!;
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [
-    convCount,
-    activeToday,
-    convActive,
-    convPending,
-    convClosed,
-    ordersDraft,
-    ordersPending,
-    ordersApproved,
-    ordersDelivered,
-    productsActive,
-    wa,
-    settings,
-    msgTodayRow,
-  ] = await Promise.all([
-    db.select({ count: count() }).from(conversationsTable).where(eq(conversationsTable.userId, userId)).then(r => r[0]),
-    db.select({ count: count() }).from(conversationsTable).where(and(eq(conversationsTable.userId, userId), gte(conversationsTable.updatedAt, today))).then(r => r[0]),
-    db.select({ count: count() }).from(conversationsTable).where(and(eq(conversationsTable.userId, userId), eq(conversationsTable.status, "active"))).then(r => r[0]),
-    db.select({ count: count() }).from(conversationsTable).where(and(eq(conversationsTable.userId, userId), eq(conversationsTable.status, "pending"))).then(r => r[0]),
-    db.select({ count: count() }).from(conversationsTable).where(and(eq(conversationsTable.userId, userId), eq(conversationsTable.status, "closed"))).then(r => r[0]),
-    db.select({ count: count() }).from(ordersTable).where(and(eq(ordersTable.userId, userId), eq(ordersTable.status, "draft"))).then(r => r[0]),
-    db.select({ count: count() }).from(ordersTable).where(and(eq(ordersTable.userId, userId), eq(ordersTable.status, "pending_review"))).then(r => r[0]),
-    db.select({ count: count() }).from(ordersTable).where(and(eq(ordersTable.userId, userId), eq(ordersTable.status, "approved"))).then(r => r[0]),
-    db.select({ count: count() }).from(ordersTable).where(and(eq(ordersTable.userId, userId), eq(ordersTable.status, "delivered"))).then(r => r[0]),
-    db.select({ count: count() }).from(productsTable).where(and(eq(productsTable.userId, userId), eq(productsTable.status, "active"))).then(r => r[0]),
-    db.select({ status: whatsappConnectionsTable.status }).from(whatsappConnectionsTable).where(eq(whatsappConnectionsTable.userId, userId)).limit(1).then(r => r[0]),
-    db.select({ agentEnabled: userSettingsTable.agentEnabled }).from(userSettingsTable).where(eq(userSettingsTable.userId, userId)).limit(1).then(r => r[0]),
+  // ── 4 queries instead of 13: use SQL CASE WHEN aggregation ────────────────
+  const [convStats, orderStats, wa, settings, msgToday, productsActive] = await Promise.all([
+    // Query 1: All conversation counts in one DB round-trip
+    db.select({
+      total:       count(),
+      activeToday: count(sql`CASE WHEN ${conversationsTable.updatedAt} >= ${today.toISOString()} THEN 1 END`),
+      active:      count(sql`CASE WHEN ${conversationsTable.status} = 'active' THEN 1 END`),
+      pending:     count(sql`CASE WHEN ${conversationsTable.status} = 'pending' THEN 1 END`),
+      closed:      count(sql`CASE WHEN ${conversationsTable.status} = 'closed' THEN 1 END`),
+    }).from(conversationsTable).where(eq(conversationsTable.userId, userId)).then(r => r[0]),
+
+    // Query 2: All order counts in one DB round-trip
+    db.select({
+      draft:          count(sql`CASE WHEN ${ordersTable.status} = 'draft' THEN 1 END`),
+      pending_review: count(sql`CASE WHEN ${ordersTable.status} = 'pending_review' THEN 1 END`),
+      approved:       count(sql`CASE WHEN ${ordersTable.status} = 'approved' THEN 1 END`),
+      delivered:      count(sql`CASE WHEN ${ordersTable.status} = 'delivered' THEN 1 END`),
+    }).from(ordersTable).where(eq(ordersTable.userId, userId)).then(r => r[0]),
+
+    // Query 3a: WhatsApp connection status
+    db.select({ status: whatsappConnectionsTable.status }).from(whatsappConnectionsTable)
+      .where(eq(whatsappConnectionsTable.userId, userId)).limit(1).then(r => r[0]),
+
+    // Query 3b: User settings
+    db.select({ agentEnabled: userSettingsTable.agentEnabled })
+      .from(userSettingsTable).where(eq(userSettingsTable.userId, userId)).limit(1).then(r => r[0]),
+
+    // Query 3c: Messages count today
     db.select({ count: count() }).from(messagesTable)
       .innerJoin(conversationsTable, eq(messagesTable.conversationId, conversationsTable.id))
       .where(and(eq(conversationsTable.userId, userId), gte(messagesTable.createdAt, today)))
       .then(r => r[0]),
+
+    // Query 4: Active products count
+    db.select({ count: count() }).from(productsTable)
+      .where(and(eq(productsTable.userId, userId), eq(productsTable.status, "active")))
+      .then(r => r[0]),
   ]);
 
   res.json({
-    conversations: Number(convCount?.count ?? 0),
-    activeToday: Number(activeToday?.count ?? 0),
-    messagesToday: Number(msgTodayRow?.count ?? 0),
-    waStatus: wa?.status ?? "idle",
-    agentEnabled: settings?.agentEnabled ?? true,
-    convActive: Number(convActive?.count ?? 0),
-    convPending: Number(convPending?.count ?? 0),
-    convClosed: Number(convClosed?.count ?? 0),
-    ordersDraft: Number(ordersDraft?.count ?? 0),
-    ordersPendingReview: Number(ordersPending?.count ?? 0),
-    ordersApproved: Number(ordersApproved?.count ?? 0),
-    ordersDelivered: Number(ordersDelivered?.count ?? 0),
-    productsActive: Number(productsActive?.count ?? 0),
+    conversations:       Number(convStats?.total ?? 0),
+    activeToday:         Number(convStats?.activeToday ?? 0),
+    messagesToday:       Number(msgToday?.count ?? 0),
+    waStatus:            wa?.status ?? "idle",
+    agentEnabled:        settings?.agentEnabled ?? true,
+    convActive:          Number(convStats?.active ?? 0),
+    convPending:         Number(convStats?.pending ?? 0),
+    convClosed:          Number(convStats?.closed ?? 0),
+    ordersDraft:         Number(orderStats?.draft ?? 0),
+    ordersPendingReview: Number(orderStats?.pending_review ?? 0),
+    ordersApproved:      Number(orderStats?.approved ?? 0),
+    ordersDelivered:     Number(orderStats?.delivered ?? 0),
+    productsActive:      Number(productsActive?.count ?? 0),
   });
 });
+
 
 router.get("/conversations", async (req, res) => {
   const userId = req.session.userId!;
