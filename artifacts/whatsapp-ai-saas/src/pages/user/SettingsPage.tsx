@@ -132,7 +132,7 @@ export default function SettingsPage() {
   const { toast } = useToast();
   const [form, setForm] = useState<UserSettings>(DEFAULT);
   const [loading, setLoading] = useState(true);
-  const [openSection, setOpenSection] = useState<string>("personality");
+  const [openSection, setOpenSection] = useState<string>("");
   const [savingSection, setSavingSection] = useState<string | null>(null);
   const [savedSection, setSavedSection] = useState<string | null>(null);
   const [sendingReport, setSendingReport] = useState<string | null>(null);
