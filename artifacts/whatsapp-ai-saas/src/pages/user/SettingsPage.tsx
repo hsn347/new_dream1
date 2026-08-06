@@ -30,7 +30,7 @@ const DEFAULT: UserSettings = {
   stratFollowup: true,
   stratCart: true,
   stratUpsell: true,
-  stratPromo: false,
+  stratPromo: true,
   stratReview: true,
   sendProductImages: true,
   orderSystemEnabled: true,
@@ -54,7 +54,6 @@ const DEFAULT: UserSettings = {
 
 const SECTION_FIELDS: Record<string, (keyof UserSettings)[]> = {
   personality: ["currency", "dialect", "dialectStrength", "responseDelay", "emojiLevel", "replyLength"],
-  strategies: ["stratFollowup", "stratCart", "stratUpsell", "stratPromo", "stratReview"],
   orders: ["orderSystemEnabled", "approvedOrderMessage", "deliveredOrderMessage", "lowStockThreshold"],
   review_number: ["reviewWhatsappNumber"],
   reports: ["reportEnabled", "reportFrequency", "reportTime", "reportManagerPhone"],
@@ -76,18 +75,6 @@ const SEARCH_INDEX: { section: string; terms: string[] }[] = [
     ],
   },
 
-  {
-    section: "strategies",
-    terms: [
-      "استراتيجية", "استراتيجيات", "بيع", "مبيعات",
-      "متابعة", "follow up", "تذكير", "عميل",
-      "سلة", "سله", "cart", "متروكة",
-      "اقتراح", "منتجات مكملة", "upsell", "إضافي",
-      "عروض", "كوبون", "كوبونات", "خصم", "promo", "استباقي",
-      "تقييم", "تقييمات", "مراجعة", "review", "تغذية راجعة",
-      "strategies", "sales",
-    ],
-  },
 
   {
     section: "orders",
@@ -170,8 +157,22 @@ export default function SettingsPage() {
           ...DEFAULT, ...s,
           openingMessage: s.openingMessage ?? DEFAULT.openingMessage,
           closingMessage: s.closingMessage ?? DEFAULT.closingMessage,
+          stratFollowup: true,
+          stratCart: true,
+          stratUpsell: true,
+          stratPromo: true,
+          stratReview: true,
         });
         setKnownGroups(groups);
+        
+        // فرض تفعيل جميع استراتيجيات البيع وتحديثها في الخلفية
+        api.user.updateSettings({
+          stratFollowup: true,
+          stratCart: true,
+          stratUpsell: true,
+          stratPromo: true,
+          stratReview: true,
+        }).catch(() => {});
       })
       .catch(() => toast({ title: "تعذّر تحميل الإعدادات", variant: "destructive" }))
       .finally(() => setLoading(false));
@@ -540,29 +541,6 @@ export default function SettingsPage() {
 
 
 
-      {/* ===== 4. استراتيجيات البيع ===== */}
-      {showSection("strategies") && <div className="bg-card border border-card-border rounded-2xl shadow-sm overflow-hidden">
-        <SectionHeader
-          id="strategies" icon={TrendingUp}
-          iconBg="bg-emerald-500/10" iconColor="text-emerald-500"
-          title="استراتيجيات البيع"
-          desc="فعّل ما يناسب عملك — تُطبَّق فوراً على الوكيل"
-        />
-        {isSectionOpen("strategies") && (
-          <div className="border-t border-border">
-            <div className="px-5">
-              <ToggleRow id="stratFollowup" label="متابعة المحادثات المعلقة" desc="رسالة تذكير للعملاء الذين لم يكملوا طلبهم" />
-              <ToggleRow id="stratCart" label="تذكير بالسلة المتروكة" desc="يذكّر بالمنتجات التي أبدى العميل اهتماماً بها" />
-              <ToggleRow id="stratUpsell" label="اقتراح منتجات مكملة" desc="يقترح منتجات ذات صلة لرفع قيمة الطلب" />
-              <ToggleRow id="stratPromo" label="إرسال العروض استباقياً" desc="يشارك كوبونات وعروض في اللحظة المناسبة" />
-              <ToggleRow id="stratReview" label="طلب تقييم بعد الاستلام" desc="رسالة شكر وطلب تقييم بعد استلام الطلب" />
-            </div>
-            <div className="flex justify-end px-5 py-4 border-t border-border">
-              <SaveBtn sectionId="strategies" />
-            </div>
-          </div>
-        )}
-      </div>}
 
 
 
