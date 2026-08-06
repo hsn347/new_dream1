@@ -26,9 +26,32 @@ export async function extractAndUpdateProfile(
       .from(productsTable)
       .where(eq(productsTable.userId, userId));
 
-    const textLower = incomingText.toLowerCase();
+    const normalize = (s: string) => s.toLowerCase().replace(/[^\w\s\u0600-\u06FF]/g, ' ');
+    const textNorm = normalize(incomingText);
+    const textWords = textNorm.split(/\s+/).filter(w => w.length >= 3);
+
     const mentionedProducts = products
-      .filter((p) => p.name && textLower.includes(p.name.toLowerCase()))
+      .filter((p) => {
+        if (!p.name) return false;
+        const nameNorm = normalize(p.name);
+        
+        // 1. Exact match (ignoring punctuation)
+        if (textNorm.includes(nameNorm)) return true;
+        
+        // 2. Partial/Fuzzy word match
+        const nameWords = nameNorm.split(/\s+/).filter(w => w.length >= 3);
+        if (nameWords.length === 0) return false;
+        
+        let matchCount = 0;
+        for (const nw of nameWords) {
+          if (textWords.some(tw => tw.includes(nw) || nw.includes(tw))) {
+            matchCount++;
+          }
+        }
+        
+        // Match if at least 2 significant words match, or 100% of them
+        return matchCount >= 2 || matchCount === nameWords.length;
+      })
       .map((p) => p.name);
 
     // ── isBuyer: at least one completed / delivered order for this phone ────
