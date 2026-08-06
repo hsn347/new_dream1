@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 import { api, type AnalyticsData } from "@/lib/api";
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer,
+  AreaChart, CartesianGrid, ResponsiveContainer,
+  Area as _Area, XAxis as _XAxis, YAxis as _YAxis, Tooltip as _Tooltip
 } from "recharts";
+
+const Area: any = _Area;
+const XAxis: any = _XAxis;
+const YAxis: any = _YAxis;
+const Tooltip: any = _Tooltip;
 import {
   TrendingUp, TrendingDown, ShoppingBag, MessageCircle,
   DollarSign, Percent, ArrowUpRight, ArrowDownRight, Package, Star,
@@ -248,7 +253,7 @@ export default function AnalyticsPage() {
                 <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-emerald-400 rounded-full inline-block" />الطلبات</span>
               </div>
             </div>
-            {data.dailyData.length === 0 || data.dailyData.every(d => d.orders === 0) ? (
+            {(!data.dailyData || data.dailyData.length === 0 || data.dailyData.every((d) => d.orders === 0)) ? (
               <div className="h-40 flex flex-col items-center justify-center text-muted-foreground gap-2">
                 <TrendingUp className="w-8 h-8 opacity-20" />
                 <p className="text-sm">لا توجد طلبات في هذه الفترة</p>
