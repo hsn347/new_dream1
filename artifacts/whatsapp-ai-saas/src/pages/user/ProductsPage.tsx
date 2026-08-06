@@ -573,7 +573,6 @@ export default function ProductsPage() {
       setEditTarget(null);
       setJustCreated(null);
       toast({ title: "✓ تم تحديث المنتج" });
-      fetchProducts();
     } catch (err) {
       toast({ title: "خطأ في التحديث", description: (err as Error).message, variant: "destructive" });
     } finally {
@@ -586,19 +585,18 @@ export default function ProductsPage() {
     try {
       await api.user.products.update(product.id, { status: newStatus });
       setProducts(prev => prev.map(p => p.id === product.id ? { ...p, status: newStatus } : p));
-      fetchProducts();
     } catch {
       toast({ title: "خطأ في تغيير الحالة", variant: "destructive" });
     }
   };
 
   const handleDelete = async (id: number) => {
+    if (!window.confirm("هل أنت متأكد من رغبتك في حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء.")) return;
     try {
       await api.user.products.remove(id);
       setProducts(prev => prev.filter(p => p.id !== id));
       setTotal(t => t - 1);
       toast({ title: "تم حذف المنتج" });
-      fetchProducts();
     } catch (err) {
       toast({ title: "خطأ في الحذف", description: (err as Error).message, variant: "destructive" });
     }
