@@ -175,6 +175,9 @@ export default function Login() {
 
         {/* Top: brand + AI badge */}
         <div className="z-10 relative flex justify-between items-start">
+          <div className="inline-flex items-center gap-1.5 bg-sidebar-accent px-3 py-1.5 border border-sidebar-border rounded-full font-medium text-sidebar-foreground text-xs">
+ 
+          </div>
           <div className="flex items-center gap-3">
             <div className="text-end">
               <p className="font-bold text-sidebar-foreground text-sm">وكيل المبيعات</p>
