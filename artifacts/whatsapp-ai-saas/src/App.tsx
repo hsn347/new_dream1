@@ -110,9 +110,7 @@ function ProtectedRoute({ children, requireAdmin = false }: { children: React.Re
     return <Redirect to="/admin/keys" />;
   }
 
-  const Layout = requireAdmin ? AdminLayout : UserLayout;
-
-  return <Layout>{children}</Layout>;
+  return <>{children}</>;
 }
 
 
