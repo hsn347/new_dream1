@@ -204,7 +204,7 @@ export default function AnalyticsPage() {
 
       {loading ? (
         <PageLoader text="جاري تهيئة البيانات..." />
-      ) : (
+      ) : data ? (
         <>
           {/* ── Stats ─────────────────────────────────────────── */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -399,7 +399,7 @@ export default function AnalyticsPage() {
 
           </div>
         </>
-      )}
+      ) : null}
     </div>
   );
 }

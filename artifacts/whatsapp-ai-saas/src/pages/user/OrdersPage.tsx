@@ -5,7 +5,7 @@ import {
   ShoppingBag, CheckCircle2, XCircle, Truck, Clock, Ban,
   ChevronDown, ChevronUp, Phone, MapPin, Receipt, Loader2,
   Search, Filter, FileText, Package, RotateCcw, StickyNote,
-  User, FilePlus, ChevronLeft, Save,
+  User, FilePlus, ChevronLeft, Save, AlertCircle, Archive, ArrowRight, PackageX
 } from "lucide-react";
 import { PageLoader } from "@/components/ui/spinner";
 import { api, type Return, type ReturnStatus } from "@/lib/api";
