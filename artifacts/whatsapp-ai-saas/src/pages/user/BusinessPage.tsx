@@ -485,23 +485,23 @@ export default function BusinessPage() {
                 </div>
                 <div className="space-y-1.5">
                   {quickShifts.map((s, si) => (
-                    <div key={si} className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground w-10 shrink-0 text-end">
+                    <div key={si} className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-[11px] sm:text-xs text-muted-foreground w-10 shrink-0 text-end">
                         {si === 0 ? "صباحي" : si === 1 ? "مسائي" : "ليلي"}
                       </span>
                       <input type="time" value={s.open}
                         onChange={e => setQuickShifts(prev => prev.map((x, j) => j === si ? { ...x, open: e.target.value } : x))}
-                        className="h-7 px-2 rounded-lg border border-input bg-background text-xs focus:outline-none focus:ring-1 focus:ring-ring w-24"
+                        className="h-7 px-1 sm:px-2 flex-1 min-w-0 rounded-lg border border-input bg-background text-[11px] sm:text-xs focus:outline-none focus:ring-1 focus:ring-ring text-center"
                       />
-                      <span className="text-muted-foreground text-xs shrink-0">—</span>
+                      <span className="text-muted-foreground text-[10px] sm:text-xs shrink-0">—</span>
                       <input type="time" value={s.close}
                         onChange={e => setQuickShifts(prev => prev.map((x, j) => j === si ? { ...x, close: e.target.value } : x))}
-                        className="h-7 px-2 rounded-lg border border-input bg-background text-xs focus:outline-none focus:ring-1 focus:ring-ring w-24"
+                        className="h-7 px-1 sm:px-2 flex-1 min-w-0 rounded-lg border border-input bg-background text-[11px] sm:text-xs focus:outline-none focus:ring-1 focus:ring-ring text-center"
                       />
                       {quickShifts.length > 1 && (
                         <button type="button"
                           onClick={() => setQuickShifts(s => s.filter((_, j) => j !== si))}
-                          className="text-muted-foreground hover:text-destructive p-0.5 transition-colors"
+                          className="text-muted-foreground hover:text-destructive p-0.5 transition-colors shrink-0"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -572,22 +572,22 @@ export default function BusinessPage() {
                   {wh.enabled && (
                     <div className="mt-2 space-y-2">
                       {wh.shifts.map((shift, si) => (
-                        <div key={si} className="flex items-center gap-2">
-                          <span className="text-xs text-muted-foreground w-12 shrink-0 text-end">
+                        <div key={si} className="flex items-center gap-1.5 sm:gap-2">
+                          <span className="text-[11px] sm:text-xs text-muted-foreground w-10 sm:w-12 shrink-0 text-end">
                             {si === 0 ? "صباحي" : si === 1 ? "مسائي" : "ليلي"}
                           </span>
                           <input
                             type="time"
                             value={shift.open}
                             onChange={e => updShift(i, si, "open", e.target.value)}
-                            className="h-8 px-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring w-28"
+                            className="h-8 px-1 sm:px-2 flex-1 min-w-0 rounded-lg border border-input bg-background text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-ring text-center"
                           />
-                          <span className="text-muted-foreground text-xs shrink-0">—</span>
+                          <span className="text-muted-foreground text-[10px] sm:text-xs shrink-0">—</span>
                           <input
                             type="time"
                             value={shift.close}
                             onChange={e => updShift(i, si, "close", e.target.value)}
-                            className="h-8 px-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring w-28"
+                            className="h-8 px-1 sm:px-2 flex-1 min-w-0 rounded-lg border border-input bg-background text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-ring text-center"
                           />
                           {wh.shifts.length > 1 && (
                             <button
