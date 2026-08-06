@@ -245,7 +245,7 @@ export default function AnalyticsPage() {
               </div>
               <div className="flex items-center gap-3 text-xs text-muted-foreground shrink-0">
                 <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-primary rounded-full inline-block" />الإيرادات</span>
-                {!isMobile && <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-emerald-400 rounded-full inline-block" />الطلبات</span>}
+                <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-emerald-400 rounded-full inline-block" />الطلبات</span>
               </div>
             </div>
             {data.dailyData.length === 0 || data.dailyData.every(d => d.orders === 0) ? (
@@ -283,23 +283,20 @@ export default function AnalyticsPage() {
                     width={42}
                     tickCount={4}
                   />
-                  {!isMobile && (
-                    <YAxis
-                      yAxisId="orders"
-                      orientation="left"
-                      tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }}
-                      tickLine={false}
-                      axisLine={false}
-                      allowDecimals={false}
-                      width={36}
-                      tickCount={4}
-                    />
-                  )}
+                  <YAxis
+                    yAxisId="orders"
+                    orientation="left"
+                    tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }}
+                    tickLine={false}
+                    axisLine={false}
+                    allowDecimals={false}
+                    width={36}
+                    tickCount={4}
+                    hide={isMobile}
+                  />
                   <Tooltip content={<ChartTooltip />} />
                   <Area yAxisId="revenue" type="monotone" dataKey="revenue" name="الإيرادات" stroke="#16a34a" fill="url(#gRevenue)" strokeWidth={2.5} dot={false} />
-                  {!isMobile && (
-                    <Area yAxisId="orders" type="monotone" dataKey="orders" name="الطلبات" stroke="#4ade80" fill="url(#gOrders)" strokeWidth={2} dot={false} />
-                  )}
+                  <Area yAxisId="orders" type="monotone" dataKey="orders" name="الطلبات" stroke="#4ade80" fill="url(#gOrders)" strokeWidth={2} dot={false} />
                 </AreaChart>
               </ResponsiveContainer>
             )}

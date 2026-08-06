@@ -555,7 +555,7 @@ export default function ConversationsPage() {
               )}
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-2.5" style={{ direction: "ltr" }}>
+              <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-2.5">
                 {loadingMsgs && (
                   <div className="text-center text-muted-foreground text-sm py-10 flex flex-col items-center gap-2">
                     <Loader2 className="w-5 h-5 animate-spin opacity-40" />
@@ -581,7 +581,7 @@ export default function ConversationsPage() {
                   const showLabel = isAgent && (!prev || prev.from !== "agent");
 
                   return (
-                    <div key={msg.id} className={cn("flex", isAgent ? "justify-start" : "justify-end")} style={{ direction: "rtl" }}>
+                    <div key={msg.id} className={cn("flex", isAgent ? "justify-start" : "justify-end")}>
                       <div className={cn(
                         "max-w-[80%] md:max-w-sm lg:max-w-md",
                         i > 0 && prev?.from === msg.from ? "mt-0.5" : "mt-2.5",
