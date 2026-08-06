@@ -6,7 +6,7 @@ import { Bot, MessageCircle, TrendingUp, Users, Zap, Eye, EyeOff } from "lucide-
 const features = [
   { icon: MessageCircle, title: "محادثات ذكية", desc: "رد تلقائي طبيعي بلهجتك المحلية" },
   { icon: TrendingUp, title: "زيادة المبيعات", desc: "إقناع واحترافية في كل رسالة" },
-  { icon: Users, title: "إدارة العملاء", desc: "CRM متكامل داخل واتساب" },
+  { icon: Users, title: "إدارة العملاء", desc: "CRM متكامل" },
   { icon: Zap, title: "تشغيل فوري", desc: "ابدأ خلال دقائق بدون تعقيد" },
 ];
 
@@ -39,19 +39,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex bg-muted/30" dir="rtl">
+    <div className="flex bg-muted/30 min-h-screen" dir="rtl">
 
       {/* ── Form Card (right in RTL = start) ─────────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-6 lg:max-w-[480px]">
+      <div className="flex flex-1 justify-center items-center p-6 lg:max-w-[480px]">
         <div className="w-full max-w-sm">
 
           {/* Card */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl p-8 space-y-6">
+          <div className="space-y-6 bg-card shadow-xl p-8 border border-border rounded-2xl">
 
             {/* Logo + Title */}
             <div className="space-y-1">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center shadow-md">
+                <div className="flex justify-center items-center bg-primary shadow-md rounded-xl w-11 h-11">
                   <Bot className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -59,14 +59,13 @@ export default function Login() {
                   <p className="text-muted-foreground text-xs">WhatsApp AI</p>
                 </div>
               </div>
-              <h1 className="text-2xl font-extrabold text-foreground">أهلاً بعودتك 👋</h1>
               <p className="text-muted-foreground text-sm">سجّل الدخول للوصول إلى لوحة التحكم</p>
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5" htmlFor="email">
+                <label className="block mb-1.5 font-medium text-foreground text-sm" htmlFor="email">
                   البريد الإلكتروني
                 </label>
                 <input
@@ -77,12 +76,12 @@ export default function Login() {
                   onChange={e => setEmail(e.target.value)}
                   placeholder="example@domain.com"
                   required
-                  className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm transition-all"
+                  className="bg-background px-4 border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-ring w-full h-11 text-foreground placeholder:text-muted-foreground text-sm transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5" htmlFor="password">
+                <label className="block mb-1.5 font-medium text-foreground text-sm" htmlFor="password">
                   كلمة المرور
                 </label>
                 <div className="relative">
@@ -94,12 +93,12 @@ export default function Login() {
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full h-11 px-4 pe-11 rounded-xl border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm transition-all"
+                    className="bg-background px-4 pe-11 border border-input rounded-xl focus:outline-none focus:ring-2 focus:ring-ring w-full h-11 text-foreground placeholder:text-muted-foreground text-sm transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 start-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute inset-y-0 flex items-center text-muted-foreground hover:text-foreground transition-colors start-3"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -107,7 +106,7 @@ export default function Login() {
               </div>
 
               {error && (
-                <div className="bg-destructive/10 text-destructive text-sm px-4 py-2.5 rounded-xl border border-destructive/20">
+                <div className="bg-destructive/10 px-4 py-2.5 border border-destructive/20 rounded-xl text-destructive text-sm">
                   {error}
                 </div>
               )}
@@ -116,24 +115,24 @@ export default function Login() {
                 data-testid="btn-login"
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl transition-all disabled:opacity-60 text-sm flex items-center justify-center gap-2 shadow-md shadow-primary/20"
+                className="flex justify-center items-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-60 shadow-md shadow-primary/20 rounded-xl w-full h-11 font-bold text-primary-foreground text-sm transition-all"
               >
                 {loading ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="border-2 border-white/30 border-t-white rounded-full w-4 h-4 animate-spin" />
                     جاري تسجيل الدخول...
                   </>
                 ) : (
-                  <>🔑 تسجيل الدخول</>
+                  <>تسجيل الدخول</>
                 )}
               </button>
             </form>
 
             {/* Demo credentials */}
-            <div className="rounded-xl border border-sidebar-border bg-sidebar overflow-hidden">
-              <div className="px-4 py-2.5 border-b border-sidebar-border">
-                <p className="text-xs font-semibold text-sidebar-foreground flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sidebar-primary inline-block" />
+            <div className="bg-sidebar border border-sidebar-border rounded-xl overflow-hidden">
+              <div className="px-4 py-2.5 border-sidebar-border border-b">
+                <p className="flex items-center gap-1.5 font-semibold text-sidebar-foreground text-xs">
+                  <span className="inline-block bg-sidebar-primary rounded-full w-1.5 h-1.5" />
                   بيانات تجريبية — اضغط لملء تلقائياً
                 </p>
               </div>
@@ -141,81 +140,77 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => { setEmail("admin@demo.com"); setPassword("admin123"); }}
-                  className="w-full flex justify-between items-center px-4 py-2.5 hover:bg-sidebar-accent transition-colors"
+                  className="flex justify-between items-center hover:bg-sidebar-accent px-4 py-2.5 w-full transition-colors"
                 >
                   <span className="text-xs text-sidebar-accent-foreground">مدير النظام</span>
-                  <span className="font-mono text-xs text-sidebar-foreground">admin@demo.com / admin123</span>
+                  <span className="font-mono text-sidebar-foreground text-xs">admin@demo.com / admin123</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { setEmail("user@demo.com"); setPassword("user123"); }}
-                  className="w-full flex justify-between items-center px-4 py-2.5 hover:bg-sidebar-accent transition-colors"
+                  className="flex justify-between items-center hover:bg-sidebar-accent px-4 py-2.5 w-full transition-colors"
                 >
                   <span className="text-xs text-sidebar-accent-foreground">مستخدم عادي</span>
-                  <span className="font-mono text-xs text-sidebar-foreground">user@demo.com / user123</span>
+                  <span className="font-mono text-sidebar-foreground text-xs">user@demo.com / user123</span>
                 </button>
               </div>
             </div>
 
           </div>
 
-          <p className="text-center text-xs text-muted-foreground mt-5">
+          <p className="mt-5 text-muted-foreground text-xs text-center">
             © 2026 وكيل المبيعات. جميع الحقوق محفوظة.
           </p>
         </div>
       </div>
 
       {/* ── Marketing Panel (left in RTL = end) ──────────────────── */}
-      <div className="hidden lg:flex flex-1 bg-sidebar flex-col justify-between p-10 relative overflow-hidden">
+      <div className="hidden relative lg:flex flex-col flex-1 justify-between bg-sidebar p-10 overflow-hidden">
 
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <div className="absolute -top-20 -end-20 w-80 h-80 rounded-full bg-sidebar-primary" />
-          <div className="absolute -bottom-20 -start-20 w-80 h-80 rounded-full bg-sidebar-primary" />
+          <div className="-top-20 absolute bg-sidebar-primary rounded-full w-80 h-80 -end-20" />
+          <div className="-bottom-20 absolute bg-sidebar-primary rounded-full w-80 h-80 -start-20" />
         </div>
 
         {/* Top: brand + AI badge */}
-        <div className="flex items-start justify-between relative z-10">
-          <div className="inline-flex items-center gap-1.5 bg-sidebar-accent border border-sidebar-border text-sidebar-foreground text-xs font-medium px-3 py-1.5 rounded-full">
-            <span>✨</span>
-            <span>مدعوم بالذكاء الاصطناعي</span>
-          </div>
+        <div className="z-10 relative flex justify-between items-start">
           <div className="flex items-center gap-3">
             <div className="text-end">
               <p className="font-bold text-sidebar-foreground text-sm">وكيل المبيعات</p>
-              <p className="text-sidebar-accent-foreground text-xs">WhatsApp AI Sales Agent</p>
+              <p className="text-xs text-sidebar-accent-foreground">WhatsApp AI Sales Agent</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-sidebar-primary flex items-center justify-center shadow-lg">
+            <div className="flex justify-center items-center bg-sidebar-primary shadow-lg rounded-xl w-10 h-10">
               <Bot className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>
 
         {/* Middle: headline + desc + features */}
-        <div className="space-y-8 relative z-10">
+        <div className="z-10 relative space-y-8">
           <div>
-            <h2 className="text-4xl font-extrabold text-sidebar-foreground leading-tight">
+            <h2 className="font-extrabold text-sidebar-foreground text-4xl leading-tight">
               أتمتة مبيعاتك<br />
               <span className="text-sidebar-primary">عبر واتساب</span><br />
               بالذكاء الاصطناعي
             </h2>
-            <p className="mt-4 text-sidebar-accent-foreground text-sm leading-relaxed max-w-sm">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-sidebar-accent-foreground">
               وكيل ذكي يعمل 24/7 لإدارة محادثات العملاء، عرض المنتجات، وإتمام الصفقات تلقائياً.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="gap-3 grid grid-cols-2">
             {features.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
-                className="flex items-start gap-3 p-4 rounded-xl border border-sidebar-border bg-sidebar-accent/40 backdrop-blur-sm"
+                className="flex items-start gap-3 bg-sidebar-accent/40 backdrop-blur-sm p-4 border border-sidebar-border rounded-xl"
               >
-                <div className="w-8 h-8 rounded-lg border border-sidebar-border bg-sidebar-accent flex items-center justify-center shrink-0 mt-0.5">
+                <div className="flex justify-center items-center bg-sidebar-accent mt-0.5 border border-sidebar-border rounded-lg w-8 h-8 shrink-0">
                   <Icon className="w-4 h-4 text-sidebar-primary" />
                 </div>
                 <div>
-                  <p className="text-sidebar-foreground text-sm font-semibold">{title}</p>
-                  <p className="text-sidebar-accent-foreground text-xs mt-0.5 leading-relaxed">{desc}</p>
+                  <p className="font-semibold text-sidebar-foreground text-sm">{title}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-sidebar-accent-foreground">{desc}</p>
                 </div>
               </div>
             ))}
@@ -223,7 +218,7 @@ export default function Login() {
         </div>
 
         {/* Bottom: copyright */}
-        <p className="text-sidebar-accent-foreground text-xs relative z-10">
+        <p className="z-10 relative text-xs text-sidebar-accent-foreground">
           © 2026 وكيل المبيعات. جميع الحقوق محفوظة.
         </p>
       </div>
