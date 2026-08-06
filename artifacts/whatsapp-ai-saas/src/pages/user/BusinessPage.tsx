@@ -331,7 +331,7 @@ export default function BusinessPage() {
       {/* ── Sidebar navigation (desktop) / Horizontal tabs (mobile) ── */}
       <div className="md:w-52 shrink-0">
         {/* Mobile: horizontal scrollable pill tabs */}
-        <div className="flex md:hidden gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex md:hidden gap-1.5 overflow-x-auto pb-3 px-1">
           {TABS.map(t => {
             const Icon = t.icon;
             const active = tab === t.id;
