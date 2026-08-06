@@ -562,7 +562,14 @@ export default function SettingsPage() {
                   المتغيرات المتاحة:
                   <span className="inline-flex flex-wrap gap-1.5 mt-1.5">
                     {["{{name}}", "{{orderId}}", "{{total}}", "{{address}}"].map((v) => (
-                      <code key={v} className="bg-background border border-border rounded px-1.5 py-0.5 text-[11px] font-mono text-primary">{v}</code>
+                      <code
+                        key={v}
+                        draggable
+                        onDragStart={(e) => e.dataTransfer.setData("text/plain", v)}
+                        className="bg-background border border-border rounded px-1.5 py-0.5 text-[11px] font-mono text-primary cursor-grab active:cursor-grabbing hover:bg-primary/5 transition-colors"
+                      >
+                        {v}
+                      </code>
                     ))}
                   </span>
                 </p>
