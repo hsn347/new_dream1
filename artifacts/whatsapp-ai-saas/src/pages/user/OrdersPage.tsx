@@ -602,28 +602,8 @@ export default function OrdersPage() {
   return (
     <div className="space-y-4">
 
-      {/* Tab switcher */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex gap-1 bg-muted/50 p-1 rounded-2xl w-fit">
-          <button
-            onClick={() => handleTabChange("orders")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              tab === "orders"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <ShoppingBag className="w-4 h-4" />
-            الطلبات
-            {orderStats.active > 0 && (
-              <span className="bg-primary/10 text-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                {orderStats.active}
-              </span>
-            )}
-          </button>
-        </div>
-
-        {/* Archive toggle — orders tab only */}
+      {/* Archive toggle */}
+      <div className="flex items-center justify-end gap-3 flex-wrap">
         {tab === "orders" && (
           <div className="flex gap-1 bg-muted/50 p-1 rounded-2xl">
             <button
