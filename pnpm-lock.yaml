@@ -193,9 +193,6 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.110.2
         version: 2.110.2
-      '@types/connect-pg-simple':
-        specifier: ^7.0.3
-        version: 7.0.3
       '@types/pg':
         specifier: ^8.18.0
         version: 8.18.0
@@ -266,6 +263,9 @@ importers:
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
+      '@types/connect-pg-simple':
+        specifier: ^7.0.3
+        version: 7.0.3
       '@types/cookie-parser':
         specifier: ^1.4.10
         version: 1.4.10(@types/express@5.0.6)

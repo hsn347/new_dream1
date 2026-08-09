@@ -67,7 +67,8 @@ function invalidateRelatedCache(path: string) {
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const method = options?.method || "GET";
   const isGet = method === "GET";
-  const cacheKey = isGet ? `apiCache:${path}` : null;
+  const shouldCache = isGet && path !== "/auth/me";
+  const cacheKey = shouldCache ? `apiCache:${path}` : null;
 
   if (isGet && cacheKey) {
     let cached = inMemoryCache.get(cacheKey);
