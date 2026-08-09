@@ -1,10 +1,11 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import session from "express-session";
-import MemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import pinoHttp from "pino-http";
 import router from "./routes/index.js";
 import { logger } from "./lib/logger.js";
+import { pool } from "@workspace/db";
 
 const app: Express = express();
 
@@ -47,16 +48,14 @@ app.use(express.urlencoded({ extended: true, limit: "15mb" }));
 
 const sessionSecret = process.env["SESSION_SECRET"] ?? "dev-secret-change-in-prod";
 
-// In-memory session store — much faster than PostgreSQL (no DB round-trip per request)
-// Auto-prunes expired sessions every hour, max 1000 concurrent sessions
-const MStore = MemoryStore(session);
+// PostgreSQL session store - persists sessions across server restarts
+const PgSession = connectPgSimple(session);
 
 app.use(
   session({
-    store: new MStore({
-      checkPeriod: 60 * 60 * 1000,        // prune expired sessions every 1 hour
-      ttl: 30 * 24 * 60 * 60 * 1000,      // 30 days max session age
-      max: 1000,                           // max concurrent sessions in memory
+    store: new PgSession({
+      pool: pool,
+      createTableIfMissing: true, // Automatically creates the "session" table if it doesn't exist
     }),
     secret: sessionSecret,
     resave: false,
