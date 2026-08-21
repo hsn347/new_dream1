@@ -1032,9 +1032,7 @@ export function getPublicImageUrl(imageUrl: string): string | null {
     return imageUrl;
   }
   const domain =
-    process.env["RENDER_EXTERNAL_URL"]?.replace(/^https?:\/\//, "") ??
-    process.env["REPLIT_DEV_DOMAIN"] ??
-    process.env["REPLIT_DOMAINS"]?.split(",")[0];
+    process.env["RENDER_EXTERNAL_URL"]?.replace(/^https?:\/\//, "");
   if (!domain) return imageUrl; // Last resort, just return the relative path hoping the client appends domain
   return `https://${domain.replace(/\/$/, "")}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
 }

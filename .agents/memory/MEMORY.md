@@ -1,5 +1,0 @@
-- [Agent context architecture](agent-context-architecture.md) — buildAgentContext is intentionally minimal; products go via vector, not direct context.
-- [Agent consolidation](agent-consolidation.md) — all agent logic lives in lib/agent.ts (9 sections); webhook.ts is a thin router; agentContext.ts + orderActions.ts are re-export stubs.
-- [Puppeteer Replit fix](puppeteer-replit.md) — Puppeteer needs --no-zygote --single-process and timeout:60_000 to launch Chromium in Replit containers.
-- [UserSettings new fields](usersettings-fields.md) — maxTokens and returnSystemEnabled added May 2026; cast issues with AGENT_TOOLS filter require `as unknown as typeof`.
-- [Multi-provider WhatsApp](multi-provider-whatsapp.md) — 5 providers (Evolution/Twilio/360dialog/Meta/Gupshup); config stored in JSON `config` column; waProviders.ts must stay separate from component files to avoid Vite HMR issues.
